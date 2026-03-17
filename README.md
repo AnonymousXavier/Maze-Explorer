@@ -1,4 +1,4 @@
-# 🔦 Project Name: e.g., Shadow Maze?(Name not Finalized) (WIP)
+# 🔦 Project Name: Shadow Maze?(Name not Finalized) (WIP)
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Algorithms](https://img.shields.io/badge/Algorithms-FF9900?style=for-the-badge)
