@@ -1,6 +1,6 @@
 import pygame
-from Scripts.Core.Map.maze_generator import maze_generator
-from Scripts.Globals import Settings, Enums
+from Map.maze_generator import maze_generator
+from Globals import Settings, Enums
 
 class world_generator:
 	def __init__(self) -> None:

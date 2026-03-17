@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from Scripts.Globals import Settings
+from Globals import Settings
 random.seed(Settings.MAP.SEED)
 
 class maze_generator:

@@ -1,8 +1,12 @@
+import pygame
+
+
 class WINDOW:
 	WIDTH = 1000
 	HEIGHT = 1000
 	TITLE = "Maze Explorer"
 	SIZE = WIDTH, HEIGHT
+	FPS = 60
 
 class MAP:
 	SEED = 100
@@ -20,9 +24,23 @@ class MAP:
 	CELL_WIDTH = WINDOW.WIDTH / COLS - CELL_SPACING
 	CELL_HEIGHT = WINDOW.HEIGHT / ROWS - CELL_SPACING
 
+class SPRITES:
+	WIDTH = 32
+	HEIGHT = 32
+	SIZE = (WIDTH, HEIGHT)
+
 class COLOURS:
 	GREEN = (0, 255, 0)
 	RED = (255, 0, 0)
 	BLUE = (0, 0, 125)
 	BLACK = (0, 0, 0)
 	GREY = (55, 55, 55)
+
+class PLAYER_DEFAULTS:
+	COLOR = COLOURS.GREY
+
+class CONTROLS:
+	UP = (pygame.K_w, pygame.K_UP)
+	DOWN = (pygame.K_s, pygame.K_DOWN)
+	LEFT = (pygame.K_a, pygame.K_LEFT)
+	RIGHT = (pygame.K_d, pygame.K_RIGHT)
