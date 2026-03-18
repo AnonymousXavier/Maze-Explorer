@@ -7,15 +7,20 @@ class world_generator:
 		self.maze_gen = maze_generator()
 		self.map = self.create_map()
 
+	def build(self):
+		print("Generating Grid")
 		self.maze_gen.generate()
+		print("Generated Grid")
+		print("Expanding Grid to Rooms")
 		self.scale_grid_cells_to_rooms()
+		print("Build Complete")
 
 	def draw(self, surface: pygame.Surface):
 		self.draw_map(surface)
 
 	def draw_map(self, surface: pygame.Surface):
-		r = Settings.MAP.ROWS * Settings.MAP.ROOM_HEIGHT
-		c = Settings.MAP.COLS * Settings.MAP.ROOM_WIDTH
+		r = Settings.MAP.GRID_ROWS
+		c = Settings.MAP.GRID_COLS
 		cs = (Settings.WINDOW.WIDTH / c) * Settings.MAP.SPACING_TO_WIDTH_RATIO
 		cw, ch = (Settings.WINDOW.WIDTH / c) - cs, (Settings.WINDOW.HEIGHT / r) - cs
 
@@ -34,8 +39,8 @@ class world_generator:
 
 	def create_map(self):
 		map_dict = {}
-		for y in range(Settings.MAP.ROWS * Settings.MAP.ROOM_HEIGHT):
-			for x in range(Settings.MAP.COLS * Settings.MAP.ROOM_WIDTH):
+		for y in range(Settings.MAP.WORLD_HEIGHT):
+			for x in range(Settings.MAP.WORLD_WIDTH):
 				map_dict[(x, y)] = Enums.CELL_ELEMENTS.EMPTY
 
 		return map_dict

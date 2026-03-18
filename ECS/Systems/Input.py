@@ -5,7 +5,7 @@ from ECS.Components import PlayerInputTag
 from Globals import Enums, Settings
 
 def process(world: dict, global_event: list):
-	player_id: int = None
+	player_id: int | None = None
 
 	for obj_id in world:
 		if PlayerInputTag in world[obj_id]:
