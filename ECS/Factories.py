@@ -62,8 +62,7 @@ def spawn_door(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			grid_pos= (grid_x, grid_y),
 			rect=pygame.Rect(x, y, Settings.SPRITES.WIDTH, Settings.SPRITES.HEIGHT)
 		),
-		RenderComponent: RenderComponent(color=Settings.DEBUG.DOOR_COLOR),
-		ObstacleTag: ObstacleTag()
+		RenderComponent: RenderComponent(color=Settings.DEBUG.DOOR_COLOR)
 	}
 
 	world[new_id] = door

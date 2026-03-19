@@ -12,8 +12,6 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 	cam_left, cam_top = cam_boundary["left"], cam_boundary["top"]
 	cam_right, cam_bottom = cam_boundary["right"], cam_boundary["bottom"]
 
-	# print(cam_boundary)
-
 	visible_renderable_entities = []
 	for iy in range(cam_top, cam_bottom + 1):
 		for ix in range(cam_left, cam_right + 1):

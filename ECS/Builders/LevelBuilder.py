@@ -20,6 +20,7 @@ def build_level(world: dict, spatial_grid: dict):
 			case Enums.CELL_ELEMENTS.DOOR:
 				entity_id = Factories.spawn_door(world, spatial_grid, ix, iy)
 
-		# print(entity_id, cell_id)
 		Misc.register_entity_in_grid(entity_id, (ix, iy), spatial_grid)
+
+	return world_gen.start_pos, world_gen.stop_pos
 

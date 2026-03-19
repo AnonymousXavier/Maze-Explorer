@@ -7,6 +7,8 @@ random.seed(Settings.MAP.SEED)
 class maze_generator:
 	def __init__(self) -> None:
 		self.grid: dict[tuple[int, int], list] = self.create_grid()
+		self.start_pos: tuple 
+		self.stop_pos: tuple
 
 	def create_grid(self):
 		grid = {}
@@ -17,8 +19,14 @@ class maze_generator:
 		return grid
 
 	def generate(self, start_pos=(0, 0)):
+		self.start_pos = start_pos
+
 		path: list[tuple[int, int]] = [start_pos]
 		current_pos = start_pos
+
+		end_pos: tuple = start_pos
+		longest_distance = 0
+		current_distance = 0
 
 		while True:
 			neighbours = self.get_free_neighbours_of(current_pos)
@@ -28,6 +36,7 @@ class maze_generator:
 
 			if neighbours == []:
 				current_pos = path.pop()
+				current_distance -= 1
 				continue
 
 			path.append(current_pos)
@@ -36,6 +45,14 @@ class maze_generator:
 			self.grid[current_pos].append(next_pos)
 			self.grid[next_pos].append(current_pos)
 			current_pos = next_pos
+
+			if current_distance > longest_distance:
+				end_pos = current_pos
+				longest_distance = current_distance
+
+			current_distance += 1
+
+		self.stop_pos = end_pos
 
 	def get_free_neighbours_of(self, pos: tuple[int, int]):
 		px, py = pos
