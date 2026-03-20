@@ -28,6 +28,7 @@ def process(world: dict, global_event: list):
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			States.GAME_RUNNING = False
+			break
 
 def is_key_pressed(pressed_keys, binded_keys: tuple):
 	for key in binded_keys:

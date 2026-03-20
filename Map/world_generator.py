@@ -1,6 +1,6 @@
 import pygame
 from Map.maze_generator import maze_generator
-from Globals import Settings, Enums
+from Globals import Cache, Settings, Enums
 
 class world_generator:
 	def __init__(self) -> None:
@@ -19,6 +19,8 @@ class world_generator:
 
 		print("Expanding Grid to Rooms")
 		self.scale_grid_cells_to_rooms()
+		print("Updating Sprites")
+		self.assign_sprite_to_map_cells()
 		print("Build Complete")
 
 
@@ -59,10 +61,10 @@ class world_generator:
 	def scale_grid_cells_to_rooms(self):
 		rw, rh = Settings.MAP.ROOM_WIDTH, Settings.MAP.ROOM_HEIGHT
 
-		hrw = round(rw / 2) - 1
-		hrh = round(rh / 2) - 1
+		hrw = 0
+		hrh = 0
 
-		for (yi, xi) in self.maze_gen.grid:
+		for (xi, yi) in self.maze_gen.grid:
 			# Get map eqivalent of maze cell - topleft position
 			x = xi * (rw - 1)
 			y = yi * (rh - 1)
@@ -71,7 +73,7 @@ class world_generator:
 			for ryi in range(rw):
 				for rxi in range(rh):
 					if rxi == 0 or ryi == 0 or rxi == rw - 1 or ryi == rh - 1:
-						self.map[(x + rxi, y + ryi )] = Enums.CELL_ELEMENTS.WALL
+						self.map[(x + rxi, y + ryi )] = {"cell_id": Enums.CELL_ELEMENTS.WALL, "sprite_id": ""}
 
 			# Generate doors based on neighbours
 			for (nxi, nyi) in self.maze_gen.grid[(xi, yi)]:
@@ -79,10 +81,13 @@ class world_generator:
 				dx = nxi - xi
 				dy = nyi - yi
 
-				cx, cy = x + hrw, y + hrh
-
 				# add scaled displacement to rooms center
 				if rw % 2 == 0 and rh % 2 == 0:
+					hrw = round(rw / 2) - 1
+					hrh = round(rh / 2) - 1
+
+					cx, cy = x + hrw, y + hrh
+
 					# add scaled displacement to rooms center
 					if dx < 0:
 						nx = cx + dx * hrw
@@ -94,17 +99,16 @@ class world_generator:
 					else:
 						ny = 1 + cy + dy * hrh
 
-					# # Expand Doors to be a bit wider
-					self.map[(nx -abs(dy), ny -abs(dx))] = Enums.CELL_ELEMENTS.DOOR
 				else:
+					hrw = rw // 2 
+					hrh = rh // 2
+
+					cx, cy = x + hrw, y + hrh
+
 					nx = cx + dx * hrw
 					ny = cy + dy * hrh
 
-					# # Expand Doors to be a bit wider
-					self.map[(nx + dy, ny + dx)] = Enums.CELL_ELEMENTS.DOOR
-					self.map[(nx - dy, ny - dx)] = Enums.CELL_ELEMENTS.DOOR
-
-				self.map[(nx, ny)] = Enums.CELL_ELEMENTS.DOOR
+				self.map[(nx, ny)] = {"cell_id": Enums.CELL_ELEMENTS.DOOR, "sprite_id": ""}
 
 		start_xi, start_yi = self.start_pos
 		stop_xi, stop_yi = self.stop_pos
@@ -114,3 +118,33 @@ class world_generator:
 
 		self.start_pos = start_xi, start_yi
 		self.stop_pos = stop_xi, stop_yi
+
+	def assign_sprite_to_map_cells(self):
+		for (xi, yi) in self.map:
+			cell_id = (xi, yi)
+			above_id = (xi, yi - 1)
+			below_id = (xi, yi - 1)
+			left_id  = (xi - 1, yi)
+			right_id = (xi + 1, yi)
+
+			cell_above = None if above_id not in self.map else self.map[above_id]
+			cell_below = None if below_id not in self.map else self.map[below_id]
+			cell_left  = None if left_id not in self.map else self.map[left_id]
+			cell_right = None if right_id not in self.map else self.map[right_id]
+
+			if cell_left and cell_above:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_right_wall"]
+			elif cell_right and cell_above:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_left_wall"]
+			elif cell_left and cell_below:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_right_wall"]
+			elif cell_right and cell_below:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_left_wall"]
+
+			elif cell_above and cell_below:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["middle_left_wall"]
+			elif cell_right and cell_left:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_middle_wall"]
+
+			else:
+				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["floor"]

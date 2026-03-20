@@ -3,28 +3,38 @@ from Globals import Enums, Settings, Misc
 
 interpolating_objects = {}
 
+frame = 0
+
 def process(world: dict, spatial_grid: dict, global_event: list, delta: float):
-    for event in global_event:
-        if event["type"] == Enums.EventType.MOVEMENT_INTENT:
-            obj_id = event["entity_id"] 
-            if SpacialComponent in world[obj_id]:
-                obj = world[obj_id]
+    global frame
 
-                gx, gy = obj[SpacialComponent].grid_pos
-                dx, dy = event["dx"], event["dy"]
-                nx, ny = (gx + dx, gy + dy)
+    if frame % (Settings.WINDOW.FPS / Settings.WINDOW.INPUTS_CHECKS_PER_SEC) == 0:
+        for event in global_event:
+            hit_a_wall = False
 
-                if (nx, ny) in spatial_grid:
-                    for _obj_id in spatial_grid[(nx, ny)]:
-                        if ObstacleTag in world[_obj_id]:
-                            return
+            if event["type"] == Enums.EventType.MOVEMENT_INTENT:
+                obj_id = event["entity_id"] 
+                if SpacialComponent in world[obj_id]:
+                    obj = world[obj_id]
 
-                obj_rect = world[obj_id][SpacialComponent].rect
-                tx, ty = nx * Settings.SPRITES.WIDTH, ny * Settings.SPRITES.HEIGHT
+                    gx, gy = obj[SpacialComponent].grid_pos
+                    dx, dy = event["dx"], event["dy"]
+                    nx, ny = (gx + dx, gy + dy)
 
-                interpolating_objects[obj_id] = {"position": obj_rect.topleft, "target": (tx, ty), "delta": delta}
+                    if (nx, ny) in spatial_grid:
+                        for _obj_id in spatial_grid[(nx, ny)]:
+                            if ObstacleTag in world[_obj_id]:
+                                hit_a_wall = True
+                                break
 
-                move_entity_on_spatial_grid(obj_id, (nx, ny), world, spatial_grid)
+                    if hit_a_wall: break
+
+                    obj_rect = world[obj_id][SpacialComponent].rect
+                    tx, ty = nx * Settings.SPRITES.WIDTH, ny * Settings.SPRITES.HEIGHT
+
+                    interpolating_objects[obj_id] = {"position": obj_rect.topleft, "target": (tx, ty), "delta": delta}
+
+                    move_entity_on_spatial_grid(obj_id, (nx, ny), world, spatial_grid)
 
     # Interpolate Movements
     objects_done_with_interpolation = []
@@ -35,18 +45,18 @@ def process(world: dict, spatial_grid: dict, global_event: list, delta: float):
 
         dx, dy = tx - px, ty - py
 
-        speed = delta * Settings.SPRITES.WIDTH
-
         if dx == 0 and dy == 0:
             world[obj_id][SpacialComponent].rect.topleft = tx, ty
             objects_done_with_interpolation.append(obj_id)
             continue 
 
-        interpolating_objects[obj_id]["position"] = Misc.move_towards((px, py), (tx, ty), speed)
+        interpolating_objects[obj_id]["position"] = Misc.move_towards((px, py), (tx, ty), Settings.GAME.PLAYER_SPEED * delta)
         world[obj_id][SpacialComponent].rect.topleft = interpolating_objects[obj_id]["position"]
 
     for obj_id in objects_done_with_interpolation:
         del interpolating_objects[obj_id]
+
+    frame += 1
 
 def move_entity_on_spatial_grid(entity_id: int, new_position: tuple, world:dict, spatial_grid: dict):
     obj = world[entity_id]

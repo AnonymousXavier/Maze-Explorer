@@ -12,3 +12,14 @@ class EventType(Enum):
 class INTERPOLATION(Enum):
 	LINEAR = 0
 	EASE_OUT = 1
+
+class ANIM_STATES:
+	WALK = 0
+	IDLE = 1
+	ATTACK = 2
+
+class DIRECTIONS:
+	UP = 1
+	DOWN = 0
+	LEFT = 2
+	RIGHT = 3

@@ -18,6 +18,9 @@ class RenderComponent:
 class StalkerComponent:
 	target_id: Optional[int] = None
 
+@dataclass(kw_only=True)
+class StateComponent:
+	state: int
 
 class PlayerInputTag: pass
 class ObstacleTag: pass

@@ -8,7 +8,7 @@ def process(world: dict, camera: dict, delta: float):
 	targets_id = camera[StalkerComponent].target_id
 	targets_rect = world[targets_id][SpacialComponent].rect
 
-	cam_rect.center = Misc.move_towards(cam_rect.center, targets_rect.center, delta * 2)
+	cam_rect.center = Misc.interpolate_towards(cam_rect.center, targets_rect.center, delta * 2)
 
 	cam_rect.right = math.clamp(cam_rect.right, 0, Settings.MAP.WORLD_WIDTH)
 	cam_rect.left = math.clamp(cam_rect.left, 0, Settings.MAP.WORLD_WIDTH)
