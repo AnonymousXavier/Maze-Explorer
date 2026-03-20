@@ -123,7 +123,7 @@ class world_generator:
 		for (xi, yi) in self.map:
 			cell_id = (xi, yi)
 			above_id = (xi, yi - 1)
-			below_id = (xi, yi - 1)
+			below_id = (xi, yi + 1)
 			left_id  = (xi - 1, yi)
 			right_id = (xi + 1, yi)
 

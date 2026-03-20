@@ -24,5 +24,4 @@ def process(world: dict, animations: dict, events: list):
 				anim_obj["direction"] = directions[(dx, dy)]
 			else:
 				anim_obj["state"] = Enums.ANIM_STATES.IDLE
-				anim_obj["direction"] = Enums.DIRECTIONS.DOWN
 		
