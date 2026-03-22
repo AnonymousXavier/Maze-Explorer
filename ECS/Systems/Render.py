@@ -1,4 +1,4 @@
-from ECS.Components import PlayerInputTag, SpacialComponent, RenderComponent
+from ECS.Components import PlayerInputTag, RayCastRegion, SpacialComponent, RenderComponent
 from ECS.Systems import CameraSystem
 
 import pygame
@@ -35,6 +35,13 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 
 			if PlayerInputTag in world[obj_id]:
 				px, py = render_rect.center
+
+			if RayCastRegion in world[obj_id]:
+				for (xi, yi) in world[obj_id][RayCastRegion].points:
+					x, y = xi * Settings.SPRITES.WIDTH, yi * Settings.SPRITES.HEIGHT 
+					render_pos = x - camera_rect.left, y - camera_rect.top
+					render_rect = pygame.Rect(render_pos, Settings.SPRITES.SIZE)
+					pygame.draw.rect(render_surface, Settings.DEBUG.RAYCAST_COLOR, render_rect)
 
 	# Draw Overlay
 	foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)

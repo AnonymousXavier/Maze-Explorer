@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 from pygame import Rect
 import pygame
@@ -34,6 +34,16 @@ class VelocityComponent:
 	position: tuple
 	target: tuple
 	speed: float
+
+@dataclass(kw_only=True)
+class RayCastComponent:
+	facing_direction: Optional[int] = -90  # angle, -90 is up, 0 is right
+	length: int
+	angle_spread: int # Angle of the arc
+
+@dataclass(kw_only=True)
+class RayCastRegion:
+	points: set = field(default_factory=set)
 
 class ArtifactTag: pass
 class PlayerInputTag: pass

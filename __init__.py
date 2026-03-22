@@ -1,14 +1,17 @@
 import pygame
 
 from ECS.Builders import LevelBuilder
-from Globals import Settings
+from ECS.Components import AnimationComponent
+from Globals import Settings, Enums
 from Core import States
-from ECS.Systems import AnimationSystem, CameraSystem, Input, Render, Movement, StatesManager, FloorManager
+from ECS.Systems import AnimationSystem, CameraSystem, Input, RaycastSystem, Render, Movement, StatesManager, FloorManager
 from ECS import Factories
 
+player_id = -1 
 
 class Main:
     def __init__(self) -> None:
+        global player_id
         self.window = pygame.display.set_mode(Settings.WINDOW.SIZE)
         self.clock = pygame.Clock()
 
@@ -21,7 +24,15 @@ class Main:
         FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
     def update(self):
-        events = []
+
+        directions = {
+        Enums.DIRECTIONS.UP: -90,
+        Enums.DIRECTIONS.RIGHT: 0,
+        Enums.DIRECTIONS.DOWN: 90,
+        Enums.DIRECTIONS.LEFT: 180,
+        }
+
+        events = [{"type": Enums.EventType.SEARCH_INTENT, "entity_id": player_id, "direction": directions[States.world[player_id][AnimationComponent].direction]}]
         dt = self.clock.tick(Settings.WINDOW.FPS) / 1000
 
         Input.process(States.world, events)
@@ -30,8 +41,9 @@ class Main:
         StatesManager.process(States.world, events)
         CameraSystem.process(States.world, States.camera, dt)
         FloorManager.process(States.world, States.spatial_grid, States.camera)
+        RaycastSystem.process(States.world,States.spatial_grid, events)
 
-        print(self.clock.get_fps())
+        # print(self.clock.get_fps())
 
     def draw(self):
         self.window.fill(Settings.COLOURS.BLACK)
