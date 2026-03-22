@@ -11,18 +11,9 @@ class world_generator:
 		self.stop_pos: tuple
 
 	def build(self):
-		print("Generating Grid")
 		self.maze_gen.generate()
-
-		self.stop_pos = self.maze_gen.stop_pos
-		self.start_pos = self.maze_gen.start_pos
-
-		print("Expanding Grid to Rooms")
 		self.scale_grid_cells_to_rooms()
-		print("Updating Sprites")
 		self.assign_sprite_to_map_cells()
-		print("Build Complete")
-
 
 	def draw(self, surface: pygame.Surface):
 		self.draw_map(surface)
@@ -64,10 +55,13 @@ class world_generator:
 		hrw = 0
 		hrh = 0
 
+		x_factor = rw - 1
+		y_factor = rh - 1
+
 		for (xi, yi) in self.maze_gen.grid:
 			# Get map eqivalent of maze cell - topleft position
-			x = xi * (rw - 1)
-			y = yi * (rh - 1)
+			x = xi * x_factor
+			y = yi * y_factor
 
 			# Ganerate Walls for the rooms
 			for ryi in range(rw):
@@ -110,14 +104,17 @@ class world_generator:
 
 				self.map[(nx, ny)] = {"cell_id": Enums.CELL_ELEMENTS.DOOR, "sprite_id": ""}
 
-		start_xi, start_yi = self.start_pos
-		stop_xi, stop_yi = self.stop_pos
+		hrw = rw // 2 
+		hrh = rh // 2
 
-		start_xi, start_yi = start_xi * rw + hrw, start_yi * rh + hrh
-		stop_xi, stop_yi = stop_xi * rw + hrw, stop_yi * rh + hrh
+		start_xi, start_yi = self.maze_gen.start_pos
+		stop_xi, stop_yi = self.maze_gen.stop_pos
 
-		self.start_pos = start_xi, start_yi
-		self.stop_pos = stop_xi, stop_yi
+		start_x, start_y = start_xi * x_factor + hrw, start_yi * x_factor + hrh
+		stop_x, stop_y   = stop_xi  * x_factor + hrw, stop_yi  * x_factor + hrh
+
+		self.start_pos = start_x, start_y
+		self.stop_pos = stop_x, stop_y
 
 	def assign_sprite_to_map_cells(self):
 		for (xi, yi) in self.map:
@@ -132,19 +129,37 @@ class world_generator:
 			cell_left  = None if left_id not in self.map else self.map[left_id]
 			cell_right = None if right_id not in self.map else self.map[right_id]
 
-			if cell_left and cell_above:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_right_wall"]
-			elif cell_right and cell_above:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_left_wall"]
-			elif cell_left and cell_below:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_right_wall"]
-			elif cell_right and cell_below:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_left_wall"]
+			if self.map[cell_id]["cell_id"] == Enums.CELL_ELEMENTS.WALL:
+				if cell_above and cell_left and cell_right and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["wall_tee_top_bottom_right_left"]
+				elif cell_above and cell_left and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["wall_tee_top_bottom_left"]
+				elif cell_above and cell_right and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["wall_tee_top_bottom_right"]
+				elif cell_above and cell_left and cell_right:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["wall_tee_top_right_left"]
+				elif cell_left and cell_right and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["wall_tee_bottom_left_right"]
 
-			elif cell_above and cell_below:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["middle_left_wall"]
-			elif cell_right and cell_left:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_middle_wall"]
+				elif cell_left and cell_above:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_right_wall"]
+				elif cell_right and cell_above:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["bottom_left_wall"]
+				elif cell_left and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_right_wall"]
+				elif cell_right and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_left_wall"]
 
-			else:
-				self.map[cell_id]["sprite_id"] = Cache.tileset_dict["floor"]
+				elif cell_above and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["middle_left_wall"]
+
+				elif cell_right and cell_left:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["top_middle_wall"]
+
+			if self.map[cell_id]["cell_id"] == Enums.CELL_ELEMENTS.DOOR:
+
+				if cell_above and cell_below:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["door_top_bottom"]
+				elif cell_left and cell_right:
+					self.map[cell_id]["sprite_id"] = Cache.tileset_dict["door_left_right"]
+

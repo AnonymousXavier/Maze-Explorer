@@ -35,6 +35,7 @@ class VelocityComponent:
 	target: tuple
 	speed: float
 
+class ArtifactTag: pass
 class PlayerInputTag: pass
 class ObstacleTag: pass
 class FloorTag: pass

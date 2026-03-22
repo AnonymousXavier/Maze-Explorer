@@ -1,4 +1,4 @@
-from ECS.Components import SpacialComponent, RenderComponent
+from ECS.Components import PlayerInputTag, SpacialComponent, RenderComponent
 from ECS.Systems import CameraSystem
 
 import pygame
@@ -16,7 +16,10 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 		key=lambda obj_id: world[obj_id][RenderComponent].z_index
 		)
 
-	render_surface = pygame.Surface(cam_boundary["world_size"])
+	cbw, cbh = cam_boundary["world_size"]
+	px, py = -1, -1
+
+	render_surface = pygame.Surface((cbw, cbh))
 	for obj_id in sorted_entities:
 		if SpacialComponent in world[obj_id]:
 			obj = world[obj_id]
@@ -29,6 +32,16 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 				render_surface.blit(obj[RenderComponent].sprite, render_rect)
 			else:
 				pygame.draw.rect(render_surface, obj[RenderComponent].color, render_rect)
+
+			if PlayerInputTag in world[obj_id]:
+				px, py = render_rect.center
+
+	# Draw Overlay
+	foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)
+	foggy_view_surface.fill(Settings.COLOURS.BLACK)
+
+	pygame.draw.circle(foggy_view_surface, Settings.COLOURS.ZERO_ALPHA, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
+	render_surface.blit(foggy_view_surface)
 
 	transformed_surface = pygame.transform.scale(render_surface, Settings.WINDOW.SIZE)
 	surface.blit(transformed_surface, (0, 0))

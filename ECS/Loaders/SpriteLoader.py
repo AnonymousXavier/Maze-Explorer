@@ -36,4 +36,4 @@ def load_animation(file_path: str, goal_sprite_dimension: tuple, vertical=False)
 
 		return transposed_frames
 	return frames
-	
+

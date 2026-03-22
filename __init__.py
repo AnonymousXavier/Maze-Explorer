@@ -12,10 +12,11 @@ class Main:
         self.window = pygame.display.set_mode(Settings.WINDOW.SIZE)
         self.clock = pygame.Clock()
 
-        (px, py), _ = LevelBuilder.build_level(States.world, States.spatial_grid)
+        (px, py),(ax, ay) = LevelBuilder.build_level(States.world, States.spatial_grid)
 
         player_id = Factories.spawn_player(States.world, States.spatial_grid, px, py)
         States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, player_id)
+        Factories.spawn_artifact(States.world, States.spatial_grid, ax, ay)
 
         FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
@@ -29,6 +30,8 @@ class Main:
         StatesManager.process(States.world, events)
         CameraSystem.process(States.world, States.camera, dt)
         FloorManager.process(States.world, States.spatial_grid, States.camera)
+
+        print(self.clock.get_fps())
 
     def draw(self):
         self.window.fill(Settings.COLOURS.BLACK)

@@ -4,30 +4,30 @@ from Globals import Enums, Settings
 sprite_size = Settings.SPRITES.SIZE
 
 tileset_dict = {
-	# DOOR BEAM
-	"left_upper_door_beam":  (0, 0),
-	"up_upper_door_beam":    (1, 0),
-	"up_lower_door_beam":    (2, 0),
-	"left_lower_door_beam":  (0, 1),
-	"door":                  (1, 1),
-	"right_upper_door_beam": (2, 1),
-	"down_upper_door_beam":  (0, 2),
-	"down_lower_door_beam":  (1, 2),
-	"right_lower_door_beam": (2, 2),
-	# WALLS
-	"top_left_wall":         (3, 0),
-	"top_middle_wall":       (4, 0),
-	"top_right_wall":        (5, 0),
-	"middle_left_wall":      (3, 1),
-	"floor":                 (4, 1),
-	"middle_right_wall":     (5, 1),
-	"bottom_left_wall":      (3, 2),
-	"bottom_middle_wall":    (4, 2),
-	"bottom_right_wall":     (5, 2),
+	"door_left_right":                   (1, 2),
+	"door_top_bottom":                   (1, 1),
+	# TEES 
+	"wall_tee_top_bottom_right":         (0, 0),
+	"wall_tee_top_bottom_right_left":    (1, 0),
+	"wall_tee_top_bottom_left":          (2, 0),
+	"wall_tee_bottom_left_right":        (2, 1),
+	"wall_tee_top_right_left":           (0, 1),
+	# NORMAL WALLS
+	"top_left_wall":                     (3, 0),
+	"top_middle_wall":                   (4, 0),
+	"top_right_wall":                    (5, 0),
+	"middle_left_wall":                  (3, 1),
+	"floor":                             (4, 1),
+	"middle_right_wall":                 (5, 1),
+	"bottom_left_wall":                  (3, 2),
+	"bottom_middle_wall":                (4, 2),
+	"bottom_right_wall":                 (5, 2),
 }
 
 class SPRITES:
-	TILESET = load_animation = load_animation("Assets\\Sprites\\tileset.png", sprite_size)
+	TILESET = load_animation("Assets\\Sprites\\tileset.png", sprite_size)
+	ARTIFACT = load_animation("Assets\\Sprites\\Artifacts.png", sprite_size)[0]
+
 	class PLAYER:
 		red_ninja_walk = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Walk.png", sprite_size, vertical=True)
 		red_ninja_attack = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Attack.png", sprite_size)

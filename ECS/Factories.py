@@ -1,7 +1,8 @@
 import pygame
+import random
 
 from Core import States
-from ECS.Components import AnimationComponent, ObstacleTag, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
+from ECS.Components import AnimationComponent, ArtifactTag, ObstacleTag, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
 from Globals import Cache, Enums, Settings, Misc
 
 def new_camera(cams_topleft: tuple, cams_size: tuple, target_id: int):
@@ -114,6 +115,29 @@ def generate_and_spawn_floor_sprite(world: dict, spatial_grid: dict, cam_boundar
 	}
 
 	world[new_id] = floor
+	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
+
+	return new_id
+
+def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
+	x, y = grid_x * Settings.SPRITES.WIDTH, grid_y * Settings.SPRITES.HEIGHT
+
+	new_id = States.NEXT_ENTITY_ID
+	States.NEXT_ENTITY_ID += 1
+
+	artifact = {
+		SpacialComponent: SpacialComponent(
+			grid_pos=(grid_x, grid_y),
+			rect=pygame.Rect(x, y, Settings.SPRITES.WIDTH, Settings.SPRITES.HEIGHT)
+			),
+		RenderComponent: RenderComponent(
+			color=Settings.DEBUG.ARTIFACT_COLOR,
+			sprite=random.choice(Cache.SPRITES.ARTIFACT)
+			),
+		ArtifactTag: ArtifactTag()
+	}
+
+	world[new_id] = artifact
 	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
 
 	return new_id
