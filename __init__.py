@@ -3,7 +3,7 @@ import pygame
 from ECS.Builders import LevelBuilder
 from Globals import Settings
 from Core import States
-from ECS.Systems import AnimationSystem, CameraSystem, Input, Render, Movement, StatesManager
+from ECS.Systems import AnimationSystem, CameraSystem, Input, Render, Movement, StatesManager, FloorManager
 from ECS import Factories
 
 
@@ -14,8 +14,10 @@ class Main:
 
         (px, py), _ = LevelBuilder.build_level(States.world, States.spatial_grid)
 
-        player_id = Factories.spawn_player(States.world, States.spatial_grid, States.animations, px, py)
+        player_id = Factories.spawn_player(States.world, States.spatial_grid, px, py)
         States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, player_id)
+
+        FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
     def update(self):
         events = []
@@ -23,11 +25,10 @@ class Main:
 
         Input.process(States.world, events)
         Movement.process(States.world, States.spatial_grid, events, dt)
-        AnimationSystem.process(States.world, States.animations, dt)
-        StatesManager.process(States.world, States.animations, events)
+        AnimationSystem.process(States.world, dt)
+        StatesManager.process(States.world, events)
         CameraSystem.process(States.world, States.camera, dt)
-
-        print(self.clock.get_fps())
+        FloorManager.process(States.world, States.spatial_grid, States.camera)
 
     def draw(self):
         self.window.fill(Settings.COLOURS.BLACK)

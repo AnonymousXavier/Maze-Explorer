@@ -1,7 +1,5 @@
-from ECS.Components import ObstacleTag, SpacialComponent
+from ECS.Components import ObstacleTag, SpacialComponent, VelocityComponent
 from Globals import Enums, Settings, Misc
-
-interpolating_objects = {}
 
 frame = 0
 
@@ -29,32 +27,33 @@ def process(world: dict, spatial_grid: dict, global_event: list, delta: float):
 
                     if hit_a_wall: break
 
-                    obj_rect = world[obj_id][SpacialComponent].rect
                     tx, ty = nx * Settings.SPRITES.WIDTH, ny * Settings.SPRITES.HEIGHT
-
-                    interpolating_objects[obj_id] = {"position": obj_rect.topleft, "target": (tx, ty), "delta": delta}
+                    world[obj_id][VelocityComponent] = VelocityComponent(target=(tx, ty), position=world[obj_id][SpacialComponent].rect.topleft, speed=Settings.GAME.PLAYER_SPEED)
 
                     move_entity_on_spatial_grid(obj_id, (nx, ny), world, spatial_grid)
 
     # Interpolate Movements
     objects_done_with_interpolation = []
-    for obj_id in interpolating_objects:
-        px, py = interpolating_objects[obj_id]["position"]
-        tx, ty = interpolating_objects[obj_id]["target"]
-        delta = interpolating_objects[obj_id]["delta"]
+    for obj_id in world:
+        obj = world[obj_id]
+        if VelocityComponent in obj and SpacialComponent in obj:
+            px, py = obj[VelocityComponent].position
+            tx, ty = obj[VelocityComponent].target
+            speed = obj[VelocityComponent].speed
 
-        dx, dy = tx - px, ty - py
+            dx, dy = tx - px, ty - py
 
-        if dx == 0 and dy == 0:
-            world[obj_id][SpacialComponent].rect.topleft = tx, ty
-            objects_done_with_interpolation.append(obj_id)
-            continue 
+            if dx == 0 and dy == 0:
+                obj[SpacialComponent].rect.topleft = tx, ty
+                objects_done_with_interpolation.append(obj_id)
 
-        interpolating_objects[obj_id]["position"] = Misc.move_towards((px, py), (tx, ty), Settings.GAME.PLAYER_SPEED * delta)
-        world[obj_id][SpacialComponent].rect.topleft = interpolating_objects[obj_id]["position"]
+                continue 
+
+            obj[VelocityComponent].position = Misc.move_towards((px, py), (tx, ty), speed * delta)
+            obj[SpacialComponent].rect.topleft = obj[VelocityComponent].position  
 
     for obj_id in objects_done_with_interpolation:
-        del interpolating_objects[obj_id]
+        del world[obj_id][VelocityComponent]
 
     frame += 1
 

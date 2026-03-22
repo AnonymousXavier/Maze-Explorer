@@ -1,3 +1,4 @@
+from ECS.Components import AnimationComponent
 from Globals import Enums
 
 directions = {
@@ -7,7 +8,7 @@ directions = {
 	(-1, 0): Enums.DIRECTIONS.LEFT,
 }
 
-def process(world: dict, animations: dict, events: list):
+def process(world: dict, events: list):
 	entities_wanting_to_move = {}
 	
 	for event in events:
@@ -15,13 +16,14 @@ def process(world: dict, animations: dict, events: list):
 			entities_wanting_to_move[event["entity_id"]] = event["dx"], event["dy"]
 
 	for obj_id in world:
-		if obj_id in animations: # Isnt an animatable Object
-			anim_obj = animations[obj_id]
+		obj = world[obj_id]
+		if AnimationComponent in obj: # Isnt an animatable Object
+			anim_obj = obj[AnimationComponent]
 			if obj_id in entities_wanting_to_move:
 				dx, dy = entities_wanting_to_move[obj_id]
 
-				anim_obj["state"] = Enums.ANIM_STATES.WALK
-				anim_obj["direction"] = directions[(dx, dy)]
+				anim_obj.state = Enums.ANIM_STATES.WALK
+				anim_obj.direction = directions[(dx, dy)]
 			else:
-				anim_obj["state"] = Enums.ANIM_STATES.IDLE
+				anim_obj.state = Enums.ANIM_STATES.IDLE
 		

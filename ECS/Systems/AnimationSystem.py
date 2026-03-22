@@ -1,31 +1,31 @@
-from ECS.Components import RenderComponent, StateComponent
+from ECS.Components import AnimationComponent, RenderComponent, StateComponent
 
 secs_passed_for_each_entity = {}
 
-def process(world: dict, animations: dict, delta: float):
-	for obj_id in animations:
+def process(world: dict, delta: float):
+	for obj_id in world:
 		obj = world[obj_id]
-		animation_obj = animations[obj_id]
 
-		if RenderComponent in obj and StateComponent in obj:
-			frames = animation_obj["frames"]
-			state = animation_obj["state"]
-			current_frame = animation_obj["current_frame"]
-			direction = animation_obj["direction"]
+		if AnimationComponent in obj:
+			if RenderComponent in obj and StateComponent in obj:
+				frames = obj[AnimationComponent].frames
+				state = obj[AnimationComponent].state
+				current_frame = obj[AnimationComponent].current_frame
+				direction = obj[AnimationComponent].direction
 
-			sprite = frames[state][direction]
+				sprite = frames[state][direction]
 
-			# only try to animate animations
-			if type(sprite) == list:
-				number_of_sprites = len(sprite)
+				# only try to animate animations
+				if type(sprite) == list:
+					number_of_sprites = len(sprite)
 
-				if obj_id not in secs_passed_for_each_entity:
-					secs_passed_for_each_entity[obj_id] = 0
+					if obj_id not in secs_passed_for_each_entity:
+						secs_passed_for_each_entity[obj_id] = 0
 
-				animation_obj["current_frame"] = animate(obj_id, sprite, current_frame, number_of_sprites * 1.5)
-				sprite = sprite[animation_obj["current_frame"]]
+					obj[AnimationComponent].current_frame = animate(obj_id, sprite, current_frame, number_of_sprites * 1.5)
+					sprite = sprite[obj[AnimationComponent].current_frame]
 
-			obj[RenderComponent].sprite = sprite
+				obj[RenderComponent].sprite = sprite
 
 	for obj_id in secs_passed_for_each_entity:
 		secs_passed_for_each_entity[obj_id] += delta

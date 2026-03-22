@@ -9,7 +9,6 @@ def build_level(world: dict, spatial_grid: dict):
 
 	dxi, dyi = Cache.tileset_dict["door"]
 	for (ix, iy) in world_gen.map:
-		print((ix, iy), world_gen.map[(ix, iy)])
 		cell_id = world_gen.map[(ix, iy)]["cell_id"]
 		sxi, syi =  world_gen.map[(ix, iy)]["sprite_id"]
 		sprite = Cache.SPRITES.TILESET[syi][sxi]
@@ -27,4 +26,3 @@ def build_level(world: dict, spatial_grid: dict):
 		Misc.register_entity_in_grid(entity_id, (ix, iy), spatial_grid)
 
 	return world_gen.start_pos, world_gen.stop_pos
-

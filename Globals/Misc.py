@@ -1,5 +1,3 @@
-import pygame
-
 from Globals import Enums
 
 def register_entity_in_grid(entity_id: int, pos: tuple, spatial_grid: dict):
@@ -9,11 +7,12 @@ def register_entity_in_grid(entity_id: int, pos: tuple, spatial_grid: dict):
 		spatial_grid[pos].append(entity_id)
 
 def remove_entity_from_grid(entity_id: int, pos: tuple, spatial_grid: dict):
-	if entity_id in spatial_grid[pos]:
-		spatial_grid[pos].remove(entity_id)
-		if spatial_grid[pos] == []:
-			del spatial_grid[pos]
-		return True
+	if pos in spatial_grid:
+		if entity_id in spatial_grid[pos]:
+			spatial_grid[pos].remove(entity_id)
+			if spatial_grid[pos] == []:
+				del spatial_grid[pos]
+			return True
 
 def interpolate_towards(position: tuple, target_position, speed: float, interpolation_type=Enums.INTERPOLATION.LINEAR):
 	tx, ty = target_position
@@ -26,26 +25,23 @@ def interpolate_towards(position: tuple, target_position, speed: float, interpol
 	return lerp(px, tx, speed), lerp(py, ty, speed)
 
 def move_towards(position: tuple, target_position: tuple, speed: float):
-	negligible_distance = 0.01
-
 	px, py = position
 	tx, ty = target_position
-	dx, dy = tx - px, ty - py
+	dx, dy = round(tx - px), round(ty - py)
 
-	sx, sy = min(abs(speed), abs(dx)), min(abs(speed), abs(dy))
+	nx, ny = px + dx * speed, py + dy * speed
 
-	nx, ny = px + dx * sx, py + dy * sy
-	if abs(sx) < negligible_distance:
+	if dx == 0:
 		nx = tx
-	if abs(sy) < negligible_distance:
+	if dy == 0:
 		ny = ty
 
 	return nx, ny
 
 
 def lerp(start: float, end: float, speed: float):
-	if abs(speed) > abs(end - start): return end
-	return start + (end - start) * speed
+	if abs(speed) > abs(round(end - start)): return end
+	return start + round(end - start) * speed
 
 def get_visible_entities_with(world: dict, spatial_grid: dict, cam_boundary: dict, *components):
 	
