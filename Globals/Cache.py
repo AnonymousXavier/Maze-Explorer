@@ -1,4 +1,4 @@
-from ECS.Loaders.SpriteLoader import load_animation
+from ECS.Loaders.SpriteLoader import load_animation, load_sprite
 from Globals import Enums, Settings
 
 sprite_size = Settings.SPRITES.SIZE
@@ -30,15 +30,15 @@ class SPRITES:
 
 	class PLAYER:
 		red_ninja_walk = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Walk.png", sprite_size, vertical=True)
-		red_ninja_attack = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Attack.png", sprite_size)
+		red_ninja_dead = load_sprite("Assets\\Sprites\\Player\\Red Ninja\\Dead.png")
 		red_ninja_idle = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Idle.png", sprite_size)
 
 		RED_NINJA = {
-			Enums.ANIM_STATES.ATTACK: {
-				Enums.DIRECTIONS.LEFT: red_ninja_attack[0][Enums.DIRECTIONS.LEFT],
-				Enums.DIRECTIONS.RIGHT: red_ninja_attack[0][Enums.DIRECTIONS.RIGHT],
-				Enums.DIRECTIONS.UP: red_ninja_attack[0][Enums.DIRECTIONS.UP],
-				Enums.DIRECTIONS.DOWN: red_ninja_attack[0][Enums.DIRECTIONS.DOWN]
+			Enums.ANIM_STATES.DEAD: {
+				Enums.DIRECTIONS.LEFT: red_ninja_dead,
+				Enums.DIRECTIONS.RIGHT: red_ninja_dead,
+				Enums.DIRECTIONS.UP: red_ninja_dead,
+				Enums.DIRECTIONS.DOWN: red_ninja_dead
 			},
 			Enums.ANIM_STATES.WALK: {
 				Enums.DIRECTIONS.LEFT: red_ninja_walk[Enums.DIRECTIONS.LEFT],
@@ -53,3 +53,23 @@ class SPRITES:
 				Enums.DIRECTIONS.DOWN: red_ninja_idle[0][Enums.DIRECTIONS.DOWN]
 			}
 		}
+
+	class ENEMY:
+		guard_walk = load_animation("Assets\\Sprites\\Guards\\Walk.png", sprite_size, vertical=True)
+		guard_idle = load_animation("Assets\\Sprites\\Guards\\Idle.png", sprite_size)
+		
+		GUARD = {
+				Enums.ANIM_STATES.WALK: {
+					Enums.DIRECTIONS.LEFT: guard_walk[Enums.DIRECTIONS.LEFT],
+					Enums.DIRECTIONS.RIGHT: guard_walk[Enums.DIRECTIONS.RIGHT],
+					Enums.DIRECTIONS.UP: guard_walk[Enums.DIRECTIONS.UP],
+					Enums.DIRECTIONS.DOWN: guard_walk[Enums.DIRECTIONS.DOWN]
+				},
+				Enums.ANIM_STATES.IDLE: {
+					Enums.DIRECTIONS.LEFT: guard_idle[0][Enums.DIRECTIONS.LEFT],
+					Enums.DIRECTIONS.RIGHT: guard_idle[0][Enums.DIRECTIONS.RIGHT],
+					Enums.DIRECTIONS.UP: guard_idle[0][Enums.DIRECTIONS.UP],
+					Enums.DIRECTIONS.DOWN: guard_idle[0][Enums.DIRECTIONS.DOWN]
+				}
+		}
+

@@ -1,8 +1,7 @@
 import pygame
 
 from ECS.Builders import LevelBuilder
-from ECS.Components import AnimationComponent
-from Globals import Settings, Enums
+from Globals import Settings
 from Core import States
 from ECS.Systems import AnimationSystem, CameraSystem, Input, RaycastSystem, Render, Movement, StatesManager, FloorManager
 from ECS import Factories
@@ -24,26 +23,18 @@ class Main:
         FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
     def update(self):
-
-        directions = {
-        Enums.DIRECTIONS.UP: -90,
-        Enums.DIRECTIONS.RIGHT: 0,
-        Enums.DIRECTIONS.DOWN: 90,
-        Enums.DIRECTIONS.LEFT: 180,
-        }
-
-        events = [{"type": Enums.EventType.SEARCH_INTENT, "entity_id": player_id, "direction": directions[States.world[player_id][AnimationComponent].direction]}]
+        events = []
         dt = self.clock.tick(Settings.WINDOW.FPS) / 1000
 
         Input.process(States.world, events)
         Movement.process(States.world, States.spatial_grid, events, dt)
         AnimationSystem.process(States.world, dt)
-        StatesManager.process(States.world, events)
+        StatesManager.process(States.world, events, dt)
         CameraSystem.process(States.world, States.camera, dt)
         FloorManager.process(States.world, States.spatial_grid, States.camera)
         RaycastSystem.process(States.world,States.spatial_grid, events)
 
-        # print(self.clock.get_fps())
+        print(self.clock.get_fps())
 
     def draw(self):
         self.window.fill(Settings.COLOURS.BLACK)

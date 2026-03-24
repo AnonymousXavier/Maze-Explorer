@@ -44,8 +44,13 @@ class RayCastComponent:
 @dataclass(kw_only=True)
 class RayCastRegion:
 	points: set = field(default_factory=set)
+	found_entities: set = field(default_factory=set)
+	shape: Optional[tuple] = ()
+	pivot: Optional[tuple] = -1, -1
+	size: Optional[pygame.Surface] = None
 
-class ArtifactTag: pass
 class PlayerInputTag: pass
+class ArtifactTag: pass
 class ObstacleTag: pass
 class FloorTag: pass
+class GuardTag: pass

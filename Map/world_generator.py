@@ -1,6 +1,6 @@
 import pygame
 from Map.maze_generator import maze_generator
-from Globals import Cache, Settings, Enums
+from Globals import Cache, Misc, Settings, Enums
 
 class world_generator:
 	def __init__(self) -> None:
@@ -50,10 +50,9 @@ class world_generator:
 		pygame.draw.rect(surface, Settings.COLOURS.RED, stop_rect)
 
 	def scale_grid_cells_to_rooms(self):
-		rw, rh = Settings.MAP.ROOM_WIDTH, Settings.MAP.ROOM_HEIGHT
+		rw, rh = Settings.MAP.ROOM_SIZE
 
-		hrw = 0
-		hrh = 0
+		hrw, hrh = Misc.get_half_size_of_room()
 
 		x_factor = rw - 1
 		y_factor = rh - 1
@@ -77,9 +76,6 @@ class world_generator:
 
 				# add scaled displacement to rooms center
 				if rw % 2 == 0 and rh % 2 == 0:
-					hrw = round(rw / 2) - 1
-					hrh = round(rh / 2) - 1
-
 					cx, cy = x + hrw, y + hrh
 
 					# add scaled displacement to rooms center
@@ -94,9 +90,6 @@ class world_generator:
 						ny = 1 + cy + dy * hrh
 
 				else:
-					hrw = rw // 2 
-					hrh = rh // 2
-
 					cx, cy = x + hrw, y + hrh
 
 					nx = cx + dx * hrw

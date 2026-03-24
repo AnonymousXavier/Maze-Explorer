@@ -28,6 +28,12 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 
 			render_rect = pygame.Rect(render_pos, obj_rect.size)
 
+			if RayCastRegion in world[obj_id]:
+				cone_surface = world[obj_id][RayCastRegion].shape
+				pix, piy = world[obj_id][RayCastRegion].pivot
+				rx, ry = pix - camera_rect.left, piy - camera_rect.top
+				render_surface.blit(cone_surface, (rx, ry))
+
 			if obj[RenderComponent].sprite:
 				render_surface.blit(obj[RenderComponent].sprite, render_rect)
 			else:
@@ -35,13 +41,6 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 
 			if PlayerInputTag in world[obj_id]:
 				px, py = render_rect.center
-
-			if RayCastRegion in world[obj_id]:
-				for (xi, yi) in world[obj_id][RayCastRegion].points:
-					x, y = xi * Settings.SPRITES.WIDTH, yi * Settings.SPRITES.HEIGHT 
-					render_pos = x - camera_rect.left, y - camera_rect.top
-					render_rect = pygame.Rect(render_pos, Settings.SPRITES.SIZE)
-					pygame.draw.rect(render_surface, Settings.DEBUG.RAYCAST_COLOR, render_rect)
 
 	# Draw Overlay
 	foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)

@@ -2,7 +2,7 @@ import pygame
 import random
 
 from Core import States
-from ECS.Components import AnimationComponent, ArtifactTag, ObstacleTag, RayCastComponent, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
+from ECS.Components import AnimationComponent, ArtifactTag, GuardTag, ObstacleTag, RayCastComponent, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
 from Globals import Cache, Enums, Settings, Misc
 
 def new_camera(cams_topleft: tuple, cams_size: tuple, target_id: int):
@@ -31,8 +31,7 @@ def spawn_player(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			current_frame=0,
 			state=0,
 			direction=Enums.DIRECTIONS.DOWN,
-		),
-		RayCastComponent: RayCastComponent(length=5, angle_spread=90)
+		)
 	}
 
 	world[new_id] = player
@@ -160,6 +159,35 @@ def spawn_raycasted_cell(world: dict, spatial_grid: dict, grid_x: int, grid_y: i
 	}
 
 	world[new_id] = artifact
+	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
+
+	return new_id
+
+def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
+	x, y = grid_x * Settings.SPRITES.WIDTH, grid_y * Settings.SPRITES.HEIGHT
+
+	new_id = States.NEXT_ENTITY_ID
+	States.NEXT_ENTITY_ID += 1
+
+	guard = {
+		SpacialComponent: SpacialComponent(
+			grid_pos= (grid_x, grid_y),
+			rect=pygame.Rect(x, y, Settings.SPRITES.WIDTH, Settings.SPRITES.HEIGHT)
+		),
+		RenderComponent: RenderComponent(color=Settings.DEBUG.PLAYER_COLOR),
+		StateComponent: StateComponent(state=Enums.ANIM_STATES.IDLE),
+		AnimationComponent: AnimationComponent(
+			frames=Cache.SPRITES.ENEMY.GUARD,
+			current_frame=0,
+			state=0,
+			direction=Enums.DIRECTIONS.DOWN,
+		),
+		GuardTag: GuardTag(),
+		RayCastComponent: RayCastComponent(length=5, angle_spread=60),
+		ObstacleTag: ObstacleTag()
+	}
+
+	world[new_id] = guard
 	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
 
 	return new_id

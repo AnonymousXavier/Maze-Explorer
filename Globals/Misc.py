@@ -1,4 +1,4 @@
-from Globals import Enums
+from Globals import Enums, Settings
 
 def register_entity_in_grid(entity_id: int, pos: tuple, spatial_grid: dict):
 	if pos not in spatial_grid:
@@ -13,6 +13,10 @@ def remove_entity_from_grid(entity_id: int, pos: tuple, spatial_grid: dict):
 			if spatial_grid[pos] == []:
 				del spatial_grid[pos]
 			return True
+
+def fetch_entities_from_grid(pos: tuple, spatial_grid: dict):
+	if pos in spatial_grid:
+		return spatial_grid[pos]
 
 def interpolate_towards(position: tuple, target_position, speed: float, interpolation_type=Enums.INTERPOLATION.LINEAR):
 	tx, ty = target_position
@@ -63,3 +67,26 @@ def get_visible_entities_with(world: dict, spatial_grid: dict, cam_boundary: dic
 						visible_renderable_entities.append(obj_id)
 
 	return visible_renderable_entities
+
+def get_half_size_of_room():
+	rw, rh = Settings.MAP.ROOM_WIDTH, Settings.MAP.ROOM_HEIGHT
+
+	hrw = 0
+	hrh = 0
+
+	if rw % 2 == 0 and rh % 2 == 0:
+		hrw = round(rw / 2) - 1
+		hrh = round(rh / 2) - 1
+	else:
+		hrw = rw // 2 
+		hrh = rh // 2
+
+	print(hrw, hrh)
+	return hrw, hrh
+
+def clamp(value, min_value, max_value):
+	if value > max_value:
+		return min_value
+	if value < min_value:
+		return max_value
+	return value

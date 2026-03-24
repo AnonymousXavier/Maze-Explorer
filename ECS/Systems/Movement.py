@@ -6,7 +6,7 @@ frame = 0
 def process(world: dict, spatial_grid: dict, global_event: list, delta: float):
     global frame
 
-    if frame % (Settings.WINDOW.FPS / Settings.WINDOW.INPUTS_CHECKS_PER_SEC) == 0:
+    if frame % (Settings.WINDOW.FPS / Settings.UPDATE.INPUTS_CHECKS_PER_SEC) == 0:
         for event in global_event:
             hit_a_wall = False
 
