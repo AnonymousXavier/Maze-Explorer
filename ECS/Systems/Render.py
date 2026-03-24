@@ -49,5 +49,18 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 	pygame.draw.circle(foggy_view_surface, Settings.COLOURS.ZERO_ALPHA, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
 	render_surface.blit(foggy_view_surface)
 
-	transformed_surface = pygame.transform.scale(render_surface, Settings.WINDOW.SIZE)
-	surface.blit(transformed_surface, (0, 0))
+	# FOR WINDOW RESIZ-ING
+	scale_x = Settings.WINDOW.WIDTH / cbw
+	scale_y = Settings.WINDOW.HEIGHT / cbh
+	scale = min(scale_x, scale_y) 
+	
+	new_w = int(cbw * scale)
+	new_h = int(cbh * scale)
+	
+	transformed_surface = pygame.transform.scale(render_surface, (new_w, new_h))
+	
+	x_offset = (Settings.WINDOW.WIDTH - new_w) // 2
+	y_offset = (Settings.WINDOW.HEIGHT - new_h) // 2
+	
+	surface.fill(Settings.COLOURS.BLACK)
+	surface.blit(transformed_surface, (x_offset, y_offset))

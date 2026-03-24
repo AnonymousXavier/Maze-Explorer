@@ -25,10 +25,20 @@ def process(world: dict, global_event: list):
 		if is_key_pressed(pressed_keys, Settings.CONTROLS.RIGHT): 
 			global_event.append({"type": Enums.EventType.MOVEMENT_INTENT, "entity_id": player_id, "dx": 1, "dy": 0})
 
+	# Inside your event loop in Input.py
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			States.GAME_RUNNING = False
 			break
+		# WINDOW RESIZING
+		elif event.type == pygame.VIDEORESIZE:
+			Settings.WINDOW.WIDTH = event.w
+			Settings.WINDOW.HEIGHT = event.h
+			Settings.WINDOW.SIZE = (event.w, event.h)
+		# 2. Handle Fullscreen Toggle (F11)
+		elif event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_F11:
+				pygame.display.toggle_fullscreen()
 
 def is_key_pressed(pressed_keys, binded_keys: tuple):
 	for key in binded_keys:

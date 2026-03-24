@@ -11,7 +11,7 @@ player_id = -1
 class Main:
     def __init__(self) -> None:
         global player_id
-        self.window = pygame.display.set_mode(Settings.WINDOW.SIZE)
+        self.window = pygame.display.set_mode(Settings.WINDOW.SIZE, pygame.RESIZABLE)
         self.clock = pygame.Clock()
 
         (px, py),(ax, ay) = LevelBuilder.build_level(States.world, States.spatial_grid)
