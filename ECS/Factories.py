@@ -2,7 +2,7 @@ import pygame
 import random
 
 from Core import States
-from ECS.Components import AnimationComponent, ArtifactTag, GuardTag, ObstacleTag, RayCastComponent, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
+from ECS.Components import AnimationComponent, ArtifactTag, GuardTag, ObstacleTag, PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
 from Globals import Cache, Enums, Settings, Misc
 
 def new_camera(cams_topleft: tuple, cams_size: tuple, target_id: int):
@@ -184,7 +184,8 @@ def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 		),
 		GuardTag: GuardTag(),
 		RayCastComponent: RayCastComponent(length=5, angle_spread=60),
-		ObstacleTag: ObstacleTag()
+		ObstacleTag: ObstacleTag(),
+		PathFindingComponent: PathFindingComponent()
 	}
 
 	world[new_id] = guard

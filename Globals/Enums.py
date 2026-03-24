@@ -9,6 +9,7 @@ class CELL_ELEMENTS(Enum):
 class EventType(Enum):
 	MOVEMENT_INTENT = 0
 	SEARCH_INTENT = 1
+	PATHFIND_INTENT = 2
 
 class INTERPOLATION(Enum):
 	LINEAR = 0

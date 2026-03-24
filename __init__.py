@@ -3,7 +3,7 @@ import pygame
 from ECS.Builders import LevelBuilder
 from Globals import Settings
 from Core import States
-from ECS.Systems import AnimationSystem, CameraSystem, Input, RaycastSystem, Render, Movement, StatesManager, FloorManager
+from ECS.Systems import AINavigationSystem, AnimationSystem, CameraSystem, Input, RaycastSystem, Render, Movement, StatesManager, FloorManager
 from ECS import Factories
 
 player_id = -1 
@@ -26,13 +26,16 @@ class Main:
         events = []
         dt = self.clock.tick(Settings.WINDOW.FPS) / 1000
 
+        # Process Events First
         Input.process(States.world, events)
+        StatesManager.process(States.world, events, dt)
+        RaycastSystem.process(States.world,States.spatial_grid, events)
+        AINavigationSystem.process(States.world, States.spatial_grid, events)
+        # Handle Games
         Movement.process(States.world, States.spatial_grid, events, dt)
         AnimationSystem.process(States.world, dt)
-        StatesManager.process(States.world, events, dt)
         CameraSystem.process(States.world, States.camera, dt)
         FloorManager.process(States.world, States.spatial_grid, States.camera)
-        RaycastSystem.process(States.world,States.spatial_grid, events)
 
         print(self.clock.get_fps())
 

@@ -1,7 +1,7 @@
 from math import cos, sin, radians
 import pygame
 
-from ECS.Components import RayCastComponent, RayCastRegion, SpacialComponent, ObstacleTag, PlayerInputTag
+from ECS.Components import PathFindingComponent, RayCastComponent, RayCastRegion, SpacialComponent, ObstacleTag, PlayerInputTag
 from Globals import Enums, Misc, Settings
 
 directions = {
@@ -52,35 +52,38 @@ def cast_ray_and_spawn_in_grid(world: dict, spatial_grid: dict, obj: dict):
 	sx, sy = (cx, cy)
 	cone_points = [(sx, sy)]
 
+	is_pathfinding = len(obj[PathFindingComponent].path) > 0
+
 	# Add Rays
 	current_angle = min_angle
 	while current_angle <= max_angle:
 		arc_length = 0
 		hit_a_wall = False
 
-		# RAYCASTING
-		while arc_length < length - 1:
-			xi = round(cos(radians(current_angle)) * arc_length)
-			yi = round(sin(radians(current_angle)) * arc_length)
-			ray_pos = pxi + xi, pyi + yi
+		if not is_pathfinding:
+			# RAYCASTING
+			while arc_length < length - 1:
+				xi = round(cos(radians(current_angle)) * arc_length)
+				yi = round(sin(radians(current_angle)) * arc_length)
+				ray_pos = pxi + xi, pyi + yi
 
-			if ray_pos in spatial_grid:
-				for _obj_id in spatial_grid[ray_pos]:
-					if ObstacleTag in world[_obj_id]:
-						hit_a_wall = True
-          	
-			if hit_a_wall: break
+				if ray_pos in spatial_grid:
+					for _obj_id in spatial_grid[ray_pos]:
+						if ObstacleTag in world[_obj_id]:
+							hit_a_wall = True
+	          	
+				if hit_a_wall: break
 
-			obj[RayCastRegion].points.add(ray_pos)
-			entities = Misc.fetch_entities_from_grid(ray_pos, spatial_grid)
+				obj[RayCastRegion].points.add(ray_pos)
+				entities = Misc.fetch_entities_from_grid(ray_pos, spatial_grid)
 
-			if entities:
-				# For now add only if its a player
-				for entity_id in entities:
-					if PlayerInputTag in world[entity_id]:
-						obj[RayCastRegion].found_entities.add(entity_id)
+				if entities:
+					# For now add only if its a player
+					for entity_id in entities:
+						if PlayerInputTag in world[entity_id]:
+							obj[RayCastRegion].found_entities.add(entity_id)
 
-			arc_length += 0.2
+				arc_length += 0.2
 
 		# CONE GENERATION
 		fxi = sx + round(cos(radians(current_angle)) * arc_length) * sw

@@ -49,6 +49,10 @@ class RayCastRegion:
 	pivot: Optional[tuple] = -1, -1
 	size: Optional[pygame.Surface] = None
 
+@dataclass(kw_only=True)
+class PathFindingComponent:
+	path: Optional[list] = field(default_factory=list)
+
 class PlayerInputTag: pass
 class ArtifactTag: pass
 class ObstacleTag: pass
