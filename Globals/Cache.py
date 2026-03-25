@@ -27,6 +27,7 @@ tileset_dict = {
 class SPRITES:
 	TILESET = load_animation("Assets\\Sprites\\tileset.png", sprite_size)
 	ARTIFACT = load_animation("Assets\\Sprites\\Artifacts.png", sprite_size)[0]
+	EXTRACTION_POINT_MARKER = load_sprite("Assets\\Sprites\\ExtractionPointMarker.png")
 
 	class PLAYER:
 		red_ninja_walk = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Walk.png", sprite_size, vertical=True)

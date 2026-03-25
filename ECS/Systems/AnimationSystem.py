@@ -2,7 +2,7 @@ from ECS.Components import AnimationComponent, RenderComponent, AnimationStateCo
 
 secs_passed_for_each_entity = {}
 
-def process(world: dict, delta: float):
+def process(world: dict,   delta: float):
 	for obj_id in world:
 		obj = world[obj_id]
 
@@ -39,5 +39,6 @@ def animate(obj_id: int, frames: list, current_frame, fps: float):
 
 	if current_frame >= len(frames):
 		current_frame = 0
+
 
 	return current_frame

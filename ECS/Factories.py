@@ -2,7 +2,7 @@ import pygame
 import random
 
 from Core import States
-from ECS.Components import (AIStateComponent, AnimationComponent, ArtifactTag, GuardTag, InteractionComponent, ObstacleTag, 
+from ECS.Components import (AIStateComponent, AnimationComponent, ArtifactTag, ExtractionTag, GuardTag, InteractionComponent, ObstacleTag, 
 	PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, 
 	PlayerInputTag, StalkerComponent, AnimationStateComponent)
 from Globals import Cache, Enums, Settings, Misc
@@ -34,7 +34,7 @@ def spawn_player(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			state=0,
 			direction=Enums.DIRECTIONS.DOWN,
 		),
-		InteractionComponent: InteractionComponent(layer=PlayerInputTag, mask=ArtifactTag)
+		InteractionComponent: InteractionComponent(layer=PlayerInputTag, mask=(ArtifactTag, ExtractionTag))
 	}
 
 	world[new_id] = player
@@ -138,7 +138,7 @@ def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			sprite=random.choice(Cache.SPRITES.ARTIFACT)
 			),
 		ArtifactTag: ArtifactTag(),
-		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ArtifactTag)
+		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ArtifactTag, one_time=True)
 	}
 
 	world[new_id] = artifact
@@ -194,6 +194,30 @@ def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 	}
 
 	world[new_id] = guard
+	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
+
+	return new_id
+
+def spawn_extraction_point(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
+	x, y = grid_x * Settings.SPRITES.WIDTH, grid_y * Settings.SPRITES.HEIGHT
+
+	new_id = States.NEXT_ENTITY_ID
+	States.NEXT_ENTITY_ID += 1
+
+	artifact = {
+		SpacialComponent: SpacialComponent(
+			grid_pos=(grid_x, grid_y),
+			rect=pygame.Rect(x, y, Settings.SPRITES.WIDTH, Settings.SPRITES.HEIGHT)
+			),
+		RenderComponent: RenderComponent(
+			color=Settings.DEBUG.ARTIFACT_COLOR,
+			sprite=Cache.SPRITES.EXTRACTION_POINT_MARKER
+			),
+		ExtractionTag: ExtractionTag(),
+		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ExtractionTag)
+	}
+
+	world[new_id] = artifact
 	Misc.register_entity_in_grid(new_id, (grid_x, grid_y), spatial_grid)
 
 	return new_id

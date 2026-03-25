@@ -13,11 +13,13 @@ class Main:
         self.has_spawned_guards = False 
 
         (px, py),(ax, ay) = LevelBuilder.build_level(States.world, States.spatial_grid)
-
+        
+        Factories.spawn_extraction_point(States.world, States.spatial_grid, px, py)
         player_id = Factories.spawn_player(States.world, States.spatial_grid, px, py)
-        States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, player_id)
-        Factories.spawn_artifact(States.world, States.spatial_grid, ax, ay)
 
+        States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, player_id)
+
+        Factories.spawn_artifact(States.world, States.spatial_grid, ax, ay)
         FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
     def update(self):

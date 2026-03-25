@@ -4,7 +4,7 @@ from ECS.Systems import CameraSystem
 
 import pygame
 
-from Globals import Enums, Misc, Settings
+from Globals import  Misc, Settings
 
 def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dict):
 	camera_rect: pygame.Rect = camera[SpacialComponent].rect
@@ -44,7 +44,7 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 				px, py = render_rect.center
 
 	# Draw Overlay
-	if States.GAME_STATES["picked_artifact"]: # Now Looking for player
+	if States.TAKEN_ARTIFACT: # Now Looking for player
 		foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)
 		foggy_view_surface.fill(Settings.COLOURS.BLACK)
 

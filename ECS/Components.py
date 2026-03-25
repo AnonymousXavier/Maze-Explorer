@@ -61,9 +61,11 @@ class PathFindingComponent:
 class InteractionComponent:
 	mask: Any # Like Entities or Chests -> What the object will look for
 	layer: Any # Type of object it is, so it can be found by another with a matching mask
+	one_time: Optional[bool] = False # Deletes after interaction
 
 class PlayerInputTag: pass
 class ArtifactTag: pass
 class ObstacleTag: pass
 class FloorTag: pass
 class GuardTag: pass
+class ExtractionTag: pass

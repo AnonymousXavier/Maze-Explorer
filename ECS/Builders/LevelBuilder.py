@@ -2,7 +2,6 @@ import random
 
 from ECS import Factories
 from Globals import Cache, Misc
-from Map.maze_generator import maze_generator
 from Map.world_generator import world_generator
 from Globals import Enums, Settings
 

@@ -25,7 +25,7 @@ def process(world: dict, global_event: list):
 		if is_key_pressed(pressed_keys, Settings.CONTROLS.RIGHT): 
 			global_event.append({"type": Enums.EventType.MOVEMENT_INTENT, "entity_id": player_id, "dx": 1, "dy": 0})
 		if is_key_pressed(pressed_keys, Settings.CONTROLS.INTERACT):
-			global_event.append({"type": Enums.EventType.INTERACTION_INTENT, "entity_id": player_id, "property": "picked_artifact", "set_to": True})
+			global_event.append({"type": Enums.EventType.INTERACTION_INTENT, "entity_id": player_id})
 
 	# Inside your event loop in Input.py
 	for event in pygame.event.get():
