@@ -24,6 +24,8 @@ def process(world: dict, global_event: list):
 			global_event.append({"type": Enums.EventType.MOVEMENT_INTENT, "entity_id": player_id, "dx": -1, "dy": 0})
 		if is_key_pressed(pressed_keys, Settings.CONTROLS.RIGHT): 
 			global_event.append({"type": Enums.EventType.MOVEMENT_INTENT, "entity_id": player_id, "dx": 1, "dy": 0})
+		if is_key_pressed(pressed_keys, Settings.CONTROLS.INTERACT):
+			global_event.append({"type": Enums.EventType.INTERACTION_INTENT, "entity_id": player_id, "property": "picked_artifact", "set_to": True})
 
 	# Inside your event loop in Input.py
 	for event in pygame.event.get():
@@ -35,7 +37,6 @@ def process(world: dict, global_event: list):
 			Settings.WINDOW.WIDTH = event.w
 			Settings.WINDOW.HEIGHT = event.h
 			Settings.WINDOW.SIZE = (event.w, event.h)
-		# 2. Handle Fullscreen Toggle (F11)
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_F11:
 				pygame.display.toggle_fullscreen()

@@ -1,4 +1,4 @@
-from ECS.Components import AnimationComponent, RenderComponent, StateComponent
+from ECS.Components import AnimationComponent, RenderComponent, AnimationStateComponent
 
 secs_passed_for_each_entity = {}
 
@@ -7,7 +7,7 @@ def process(world: dict, delta: float):
 		obj = world[obj_id]
 
 		if AnimationComponent in obj:
-			if RenderComponent in obj and StateComponent in obj:
+			if RenderComponent in obj and AnimationStateComponent in obj:
 				frames = obj[AnimationComponent].frames
 				state = obj[AnimationComponent].state
 				current_frame = obj[AnimationComponent].current_frame

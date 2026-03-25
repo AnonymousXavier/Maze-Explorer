@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Any
 from pygame import Rect
 import pygame
 
@@ -19,7 +19,11 @@ class StalkerComponent:
 	target_id: int
 
 @dataclass(kw_only=True)
-class StateComponent:
+class AnimationStateComponent:
+	state: int
+
+@dataclass(kw_only=True)
+class AIStateComponent:
 	state: int
 
 @dataclass(kw_only=True)
@@ -52,6 +56,11 @@ class RayCastRegion:
 @dataclass(kw_only=True)
 class PathFindingComponent:
 	path: Optional[list] = field(default_factory=list)
+
+@dataclass(kw_only=True)
+class InteractionComponent:
+	mask: Any # Like Entities or Chests -> What the object will look for
+	layer: Any # Type of object it is, so it can be found by another with a matching mask
 
 class PlayerInputTag: pass
 class ArtifactTag: pass

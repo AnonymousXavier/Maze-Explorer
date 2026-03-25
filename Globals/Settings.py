@@ -78,6 +78,7 @@ class CONTROLS:
 	DOWN = (pygame.K_s, pygame.K_DOWN)
 	LEFT = (pygame.K_a, pygame.K_LEFT)
 	RIGHT = (pygame.K_d, pygame.K_RIGHT)
+	INTERACT = (pygame.K_e, pygame.K_RCTRL)
 
 
 class DEBUG:

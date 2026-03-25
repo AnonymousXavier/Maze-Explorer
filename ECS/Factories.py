@@ -2,7 +2,9 @@ import pygame
 import random
 
 from Core import States
-from ECS.Components import AnimationComponent, ArtifactTag, GuardTag, ObstacleTag, PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, PlayerInputTag, StalkerComponent, StateComponent
+from ECS.Components import (AIStateComponent, AnimationComponent, ArtifactTag, GuardTag, InteractionComponent, ObstacleTag, 
+	PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, 
+	PlayerInputTag, StalkerComponent, AnimationStateComponent)
 from Globals import Cache, Enums, Settings, Misc
 
 def new_camera(cams_topleft: tuple, cams_size: tuple, target_id: int):
@@ -25,13 +27,14 @@ def spawn_player(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 		),
 		RenderComponent: RenderComponent(color=Settings.DEBUG.PLAYER_COLOR),
 		PlayerInputTag: PlayerInputTag(),
-		StateComponent: StateComponent(state=Enums.ANIM_STATES.IDLE),
+		AnimationStateComponent: AnimationStateComponent(state=Enums.ANIM_STATES.IDLE),
 		AnimationComponent: AnimationComponent(
 			frames=Cache.SPRITES.PLAYER.RED_NINJA,
 			current_frame=0,
 			state=0,
 			direction=Enums.DIRECTIONS.DOWN,
-		)
+		),
+		InteractionComponent: InteractionComponent(layer=PlayerInputTag, mask=ArtifactTag)
 	}
 
 	world[new_id] = player
@@ -134,7 +137,8 @@ def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			color=Settings.DEBUG.ARTIFACT_COLOR,
 			sprite=random.choice(Cache.SPRITES.ARTIFACT)
 			),
-		ArtifactTag: ArtifactTag()
+		ArtifactTag: ArtifactTag(),
+		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ArtifactTag)
 	}
 
 	world[new_id] = artifact
@@ -175,7 +179,7 @@ def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			rect=pygame.Rect(x, y, Settings.SPRITES.WIDTH, Settings.SPRITES.HEIGHT)
 		),
 		RenderComponent: RenderComponent(color=Settings.DEBUG.PLAYER_COLOR),
-		StateComponent: StateComponent(state=Enums.ANIM_STATES.IDLE),
+		AnimationStateComponent: AnimationStateComponent(state=Enums.ANIM_STATES.IDLE),
 		AnimationComponent: AnimationComponent(
 			frames=Cache.SPRITES.ENEMY.GUARD,
 			current_frame=0,
@@ -185,7 +189,8 @@ def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 		GuardTag: GuardTag(),
 		RayCastComponent: RayCastComponent(length=5, angle_spread=60),
 		ObstacleTag: ObstacleTag(),
-		PathFindingComponent: PathFindingComponent()
+		PathFindingComponent: PathFindingComponent(),
+		AIStateComponent: AIStateComponent(state=Enums.AI_STATES.SEARCH),
 	}
 
 	world[new_id] = guard

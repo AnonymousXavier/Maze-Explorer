@@ -13,7 +13,6 @@ def build_level(world: dict, spatial_grid: dict):
 	world_gen.build()
 
 	spawn_walls(world, spatial_grid, world_gen)
-	spawn_guards(world, spatial_grid)
 
 	return world_gen.start_pos, world_gen.stop_pos
 

@@ -1,9 +1,10 @@
+from Core import States
 from ECS.Components import PlayerInputTag, RayCastRegion, SpacialComponent, RenderComponent
 from ECS.Systems import CameraSystem
 
 import pygame
 
-from Globals import Misc, Settings
+from Globals import Enums, Misc, Settings
 
 def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dict):
 	camera_rect: pygame.Rect = camera[SpacialComponent].rect
@@ -43,11 +44,12 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, camera:dic
 				px, py = render_rect.center
 
 	# Draw Overlay
-	foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)
-	foggy_view_surface.fill(Settings.COLOURS.BLACK)
+	if States.GAME_STATES["picked_artifact"]: # Now Looking for player
+		foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)
+		foggy_view_surface.fill(Settings.COLOURS.BLACK)
 
-	pygame.draw.circle(foggy_view_surface, Settings.COLOURS.ZERO_ALPHA, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
-	render_surface.blit(foggy_view_surface)
+		pygame.draw.circle(foggy_view_surface, Settings.COLOURS.ZERO_ALPHA, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
+		render_surface.blit(foggy_view_surface)
 
 	# FOR WINDOW RESIZ-ING
 	scale_x = Settings.WINDOW.WIDTH / cbw

@@ -1,4 +1,4 @@
-from ECS.Components import PathFindingComponent, SpacialComponent
+from ECS.Components import AIStateComponent, PathFindingComponent, SpacialComponent
 from ECS.Systems import PathFindingSystem
 from Globals import Enums
 
@@ -26,10 +26,12 @@ def process(world: dict, spatial_grid: dict, events: list):
 			if dx == 0 and dy == 0:
 				path.pop(0)
 			else:
+				world[obj_id][AIStateComponent].state = Enums.AI_STATES.MOVE
 				movement_event = {"type": Enums.EventType.MOVEMENT_INTENT, "entity_id": obj_id, "dx": dx, "dy": dy}
 				events.append(movement_event)
 		else:
 			entities_done_pathfinding.append(obj_id)
+			world[obj_id][AIStateComponent].state = Enums.AI_STATES.SEARCH
 
 	for obj_id in entities_done_pathfinding:
 		pathfinding_entities.remove(obj_id)
