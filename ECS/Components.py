@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Optional, Any
-from pygame import Rect
 import pygame
 
 @dataclass(kw_only=True)
 class SpacialComponent:
 	grid_pos: Optional[tuple] = None
-	rect: Rect
+	rect: pygame.Rect
 
 @dataclass(kw_only=True)
 class RenderComponent:
@@ -69,3 +68,23 @@ class ObstacleTag: pass
 class FloorTag: pass
 class GuardTag: pass
 class ExtractionTag: pass
+
+# UI
+@dataclass(kw_only=True)
+class BackgroundComponent:
+	color: tuple
+
+@dataclass(kw_only=True)
+class HoverComponent:
+	hovered: Optional[bool] = False
+	normal_color: tuple
+	hovered_color: tuple
+
+@dataclass(kw_only=True)
+class ClickableComponent:
+	clicked: Optional[bool] = False
+
+@dataclass(kw_only=True)
+class TextComponent:
+	text: str
+	color: tuple

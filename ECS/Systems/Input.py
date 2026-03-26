@@ -37,6 +37,7 @@ def process(world: dict, global_event: list):
 			Settings.WINDOW.WIDTH = event.w
 			Settings.WINDOW.HEIGHT = event.h
 			Settings.WINDOW.SIZE = (event.w, event.h)
+
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_F11:
 				pygame.display.toggle_fullscreen()

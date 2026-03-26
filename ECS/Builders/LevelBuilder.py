@@ -47,7 +47,7 @@ def spawn_guards(world: dict, spatial_grid: dict):
 		grid_x = xi * x_factor + hrw
 		grid_y = yi * y_factor + hrh
 
-		if (grid_x, grid_y) not in spawned_guards_positions:
+		if (grid_x, grid_y) not in spawned_guards_positions and(grid_x, grid_y) not in spatial_grid:
 			spawned_guards_positions.add((grid_x, grid_y))
 
 			Factories.spawn_guard(world, spatial_grid, grid_x, grid_y)
