@@ -1,3 +1,4 @@
+from typing import Callable
 import pygame
 import random
 
@@ -5,9 +6,10 @@ import random
 from Core import States
 from Globals import Cache, Enums, Settings, Misc
 from ECS.Components import (AIStateComponent, AnimationComponent, ArtifactTag, 
-	BackgroundComponent, ClickableComponent, ExtractionTag, GuardTag, InteractionComponent, 
+	BackgroundComponent, ClickableComponent, ExtractionTag, GuardTag, InteractableComponent, 
 	ObstacleTag, PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, 
-	PlayerInputTag, StalkerComponent, AnimationStateComponent, HoverComponent, TextComponent)
+	PlayerInputTag, StalkerComponent, AnimationStateComponent, HoverComponent, TextComponent,
+	InteractorComponent)
 
 
 def new_camera(cams_topleft: tuple, cams_size: tuple, target_id: int):
@@ -37,7 +39,7 @@ def spawn_player(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			state=0,
 			direction=Enums.DIRECTIONS.DOWN,
 		),
-		InteractionComponent: InteractionComponent(layer=PlayerInputTag, mask=(ArtifactTag, ExtractionTag))
+		InteractorComponent: InteractorComponent(mask=(ArtifactTag, ExtractionTag))
 	}
 
 	world[new_id] = player
@@ -125,7 +127,7 @@ def generate_and_spawn_floor_sprite(world: dict, spatial_grid: dict, cam_boundar
 
 	return new_id
 
-def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
+def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int, action: Callable):
 	x, y = grid_x * Settings.SPRITES.WIDTH, grid_y * Settings.SPRITES.HEIGHT
 
 	new_id = States.NEXT_ENTITY_ID
@@ -141,7 +143,7 @@ def spawn_artifact(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 			sprite=random.choice(Cache.SPRITES.ARTIFACT)
 			),
 		ArtifactTag: ArtifactTag(),
-		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ArtifactTag, one_time=True)
+		InteractableComponent: InteractableComponent(layer=ArtifactTag, action=action)
 	}
 
 	world[new_id] = artifact
@@ -201,7 +203,7 @@ def spawn_guard(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
 
 	return new_id
 
-def spawn_extraction_point(world: dict, spatial_grid: dict, grid_x: int, grid_y: int):
+def spawn_extraction_point(world: dict, spatial_grid: dict, grid_x: int, grid_y: int, action: Callable):
 	x, y = grid_x * Settings.SPRITES.WIDTH, grid_y * Settings.SPRITES.HEIGHT
 
 	new_id = States.NEXT_ENTITY_ID
@@ -217,7 +219,7 @@ def spawn_extraction_point(world: dict, spatial_grid: dict, grid_x: int, grid_y:
 			sprite=Cache.SPRITES.EXTRACTION_POINT_MARKER
 			),
 		ExtractionTag: ExtractionTag(),
-		InteractionComponent: InteractionComponent(mask=PlayerInputTag, layer=ExtractionTag)
+		InteractableComponent: InteractableComponent(layer=ExtractionTag, action=action)
 	}
 
 	world[new_id] = artifact

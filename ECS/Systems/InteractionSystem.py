@@ -1,6 +1,6 @@
 from Core import States
 from Globals import Enums, Misc
-from ECS.Components import ArtifactTag, ExtractionTag, InteractionComponent, PlayerInputTag, SpacialComponent
+from ECS.Components import ArtifactTag, ExtractionTag, InteractableComponent, InteractorComponent, PlayerInputTag, SpacialComponent
 
 
 def process(world: dict, spatial_grid: dict, events: list):
@@ -11,22 +11,10 @@ def process(world: dict, spatial_grid: dict, events: list):
 
 			grid_pos = world[player_id][SpacialComponent].grid_pos
 			entities_id_sharing_that_position = spatial_grid[grid_pos]
-			entities_sharing_that_position = [(entity_id, world[entity_id]) for entity_id in entities_id_sharing_that_position]
+			entities_sharing_that_position = [world[entity_id] for entity_id in entities_id_sharing_that_position]
 
-			for entity_id, entity in entities_sharing_that_position:
-				if InteractionComponent in entity:
-					if PlayerInputTag not in entity:
-						if ArtifactTag in entity:
-							States.TAKEN_ARTIFACT = True
-						elif ExtractionTag in entity:
-							if States.TAKEN_ARTIFACT:
-								print("Game Completed")
-							else:
-								print("Steal Artiface, we're waiting for you")
-
-						
-
-					if player[InteractionComponent].one_time:
+			for entity in entities_sharing_that_position:
+				if InteractableComponent in entity:
+					entity[InteractableComponent].action()
+					if entity[InteractableComponent].one_time:
 						Misc.remove_entity_from_grid(player_id, grid_pos, spatial_grid)
-					if entity[InteractionComponent].one_time:
-						Misc.remove_entity_from_grid(entity_id, grid_pos, spatial_grid)

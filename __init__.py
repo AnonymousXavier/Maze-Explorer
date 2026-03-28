@@ -12,15 +12,15 @@ class Main:
         self.window = pygame.display.set_mode(Settings.WINDOW.SIZE, pygame.RESIZABLE)
         self.clock = pygame.Clock()
 
-        self.ui = UI()
-        States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, self.ui.main_menu_bg__id)
-        # self.game = Game()
+        # self.ui = UI()
+        # States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, self.ui.main_menu_bg__id)
+        self.game = Game()
 
     def update(self):
         events = []
         dt = self.clock.tick(Settings.WINDOW.FPS) / 1000
         Input.process(States.world, events)
-        # self.game.update(events, dt)
+        self.game.update(events, dt)
 
     def draw(self):
         self.window.fill(Settings.COLOURS.BLACK)

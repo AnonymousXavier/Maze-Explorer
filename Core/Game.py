@@ -12,12 +12,12 @@ class Game:
 
 		(px, py),(ax, ay) = LevelBuilder.build_level(States.world, States.spatial_grid)
         
-		Factories.spawn_extraction_point(States.world, States.spatial_grid, px, py)
+		Factories.spawn_extraction_point(States.world, States.spatial_grid, px, py, self.change_game_state)
 		player_id = Factories.spawn_player(States.world, States.spatial_grid, px, py)
 
 		States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, player_id)
 
-		Factories.spawn_artifact(States.world, States.spatial_grid, ax, ay)
+		Factories.spawn_artifact(States.world, States.spatial_grid, ax, ay, self.transition_to_chase)
 		FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
 	def update(self, events: list, dt: float):
@@ -40,3 +40,12 @@ class Game:
 
 	def change_state_to_looking_for_player(self):
 		LevelBuilder.spawn_guards(States.world, States.spatial_grid)
+
+	def change_game_state(self):
+		if States.TAKEN_ARTIFACT:
+			print("Game Completed")
+		else:
+			print("Steal Artiface, we're waiting for you")
+
+	def transition_to_chase(self):
+		States.TAKEN_ARTIFACT = True

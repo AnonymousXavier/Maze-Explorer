@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Optional, Any
 import pygame
@@ -57,10 +58,15 @@ class PathFindingComponent:
 	path: Optional[list] = field(default_factory=list)
 
 @dataclass(kw_only=True)
-class InteractionComponent:
-	mask: Any # Like Entities or Chests -> What the object will look for
+class InteractableComponent:
 	layer: Any # Type of object it is, so it can be found by another with a matching mask
-	one_time: Optional[bool] = False # Deletes after interaction
+	one_time: Optional[bool] = True # Should Delete after interaction
+	action: Optional[Callable]
+
+@dataclass(kw_only=True)
+class InteractorComponent:
+	mask: Any # Like Entities or Chests -> What the object will look for
+
 
 class PlayerInputTag: pass
 class ArtifactTag: pass
