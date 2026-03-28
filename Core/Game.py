@@ -42,8 +42,11 @@ class Game:
 	def change_game_state(self):
 		if States.TAKEN_ARTIFACT:
 			print("Game Completed")
-		else:
-			print("Steal Artiface, we're waiting for you")
+			return True
+		
+		print("Steal Artiface, we're waiting for you")
 
 	def transition_to_chase(self):
 		States.TAKEN_ARTIFACT = True
+
+		return True

@@ -33,8 +33,8 @@ def process(surface: pygame.Surface, world: dict, spatial_grid: dict, UI: dict, 
 	surface.blit(ui_transformed_surface, (x_offset, y_offset))
 
 def draw_game_entities(world: dict, spatial_grid: dict, cam_boundary: dict, camera_rect):
-	cbw, cbh = cam_boundary["world_size"]
 	px, py = -1, -1
+	cbw, cbh = cam_boundary["world_size"]
 
 	visible_renderable_entities = Misc.get_visible_entities_with(world, spatial_grid, cam_boundary, RenderComponent)
 
@@ -77,7 +77,7 @@ def draw_game_entities(world: dict, spatial_grid: dict, cam_boundary: dict, came
 	return render_surface
 
 def draw_ui(UI: dict):
-	render_surface = pygame.Surface(Settings.WINDOW.DEFAULT_SIZE)
+	render_surface = pygame.Surface(Settings.WINDOW.DEFAULT_SIZE, pygame.SRCALPHA)
 	for element_id in UI:
 		element = UI[element_id]
 		if SpacialComponent in element:
@@ -87,12 +87,15 @@ def draw_ui(UI: dict):
 				else:
 					text_surface = Settings.UI.FONT.render(UI[element_id][TextComponent].text, True, UI[element_id][TextComponent].color)
 					tw, th = text_surface.size
-					bg_size = tw * (1 + Settings.UI.TEXT_PADDING_AS_PERCENTAGE_OF_SIZE), th * (1 + Settings.UI.TEXT_PADDING_AS_PERCENTAGE_OF_SIZE)
+					factor = (1 + Settings.UI.TEXT_PADDING_AS_PERCENTAGE_OF_SIZE)
+					bg_size = tw * factor, th * factor
 
 					render_rect = pygame.Rect((0, 0), bg_size)
 					render_rect.center = element[SpacialComponent].rect.center
 
+					print(element[SpacialComponent].rect)
+
 					pygame.draw.rect(render_surface, element[BackgroundComponent].color, render_rect)
-					render_surface.blit(text_surface, text_surface.get_rect(center=element[SpacialComponent].rect.center))
+					render_surface.blit(text_surface, text_surface.get_rect(center=render_rect.center))
 
 	return render_surface

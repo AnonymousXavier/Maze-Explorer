@@ -262,7 +262,7 @@ def new_panel(ui: dict, center: tuple = (0, 0), size: tuple = (0, 0)):
 
 	return new_id
 
-def label(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0)):
+def new_label(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0)):
 	new_id = States.NEXT_UI_ELEMENT_ID
 	States.NEXT_UI_ELEMENT_ID += 1
 
@@ -271,7 +271,7 @@ def label(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0)):
 
 	label = {
 		SpacialComponent: SpacialComponent(rect=rect),
-		BackgroundComponent: BackgroundComponent(color=Settings.UI.BUTTON_COLOR),
+		BackgroundComponent: BackgroundComponent(color=Settings.COLOURS.ZERO_ALPHA),
 		TextComponent: TextComponent(text=text.upper(), color=Settings.UI.TEXT_COLOR)
 	}
 
