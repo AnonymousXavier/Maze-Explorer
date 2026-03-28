@@ -1,9 +1,7 @@
-import pygame
-
 from ECS.Builders import LevelBuilder
 from Globals import Settings
 from Core import States
-from ECS.Systems import AINavigationSystem, AnimationSystem, CameraSystem, Input, InteractionSystem, RaycastSystem, RenderingSystem, Movement, AnimationStatesManager, FloorManager, AIStatesManager
+from ECS.Systems import AINavigationSystem, AnimationSystem, CameraSystem, InteractionSystem, RaycastSystem, Movement, AnimationStatesManager, FloorManager, AIStatesManager
 from ECS import Factories
 
 class Game:
