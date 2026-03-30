@@ -41,7 +41,7 @@ This project was engineered to handle complex spatial mathematics and state mana
 
 ### Controls
 * **[W, A, S, D]** or **[Arrow Keys]** - Move
-* **[Space]** or **[E]** or or **[X]** - Interact (Grab Artifact / Extract)
+* **[Space]** or **[E]** or **[X]** - Interact (Grab Artifact / Extract)
 * **[F11]** - Toggle Fullscreen
 
 ### The Objective
