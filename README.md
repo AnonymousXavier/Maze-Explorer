@@ -1,4 +1,4 @@
-# 🔦 [INSERT CHOSEN NAME HERE] 
+# 🔦 MAZE EXPLORER 
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Pygame](https://img.shields.io/badge/Pygame-CE-green?style=for-the-badge)
@@ -6,7 +6,7 @@
 
 > **A stealth-action maze crawler built entirely from scratch in Python. Features a custom Entity-Component-System (ECS), bespoke spatial partitioning, state-driven AI, and dynamic raycasted visibility.**
 
-![Gameplay Banner / Title Screen](docs/banner.png) *(Replace with a wide screenshot or GIF of the title screen)*
+![Gameplay Banner / Title Screen](docs/banner.png)
 
 ## 📖 The Hook
 
@@ -19,13 +19,13 @@ Navigate the dark, dodge their dynamic detection cones, and survive the extracti
 ## 📸 Visual Showcase
 
 ### 1. The Infiltration (Exploration Phase)
-![Exploration Phase](docs/exploration.gif) *(Replace with a GIF of the player moving through the fully lit maze, showing the procedural generation)*
+![Exploration Phase](docs/exploration.gif)
 
 ### 2. The Raycasted AI 
-![Guard FOV](docs/raycast.gif) *(Replace with a GIF demonstrating the dynamic raycast cones bouncing off walls and searching the environment)*
+![Guard FOV](docs/raycast.gif)
 
 ### 3. The Heist (Extraction Phase)
-![Lights Out](docs/lights_out.gif) *(Replace with a GIF of the moment the artifact is grabbed: the screen goes dark, the player's light radius shrinks, and the guards spawn)*
+![Lights Out](docs/lights_out.gif)
 
 ## 🛠️ Technical Architecture
 
@@ -41,7 +41,7 @@ This project was engineered to handle complex spatial mathematics and state mana
 
 ### Controls
 * **[W, A, S, D]** or **[Arrow Keys]** - Move
-* **[Space]** or **[E]** or or **[X]** - Interact (Grab Artifact / Extract)
+* **[Space]** or **[E]** or **[X]** - Interact (Grab Artifact / Extract)
 * **[F11]** - Toggle Fullscreen
 
 ### The Objective
