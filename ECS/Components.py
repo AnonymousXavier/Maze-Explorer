@@ -82,15 +82,24 @@ class BackgroundComponent:
 
 @dataclass(kw_only=True)
 class HoverComponent:
-	hovered: Optional[bool] = False
 	normal_color: tuple
 	hovered_color: tuple
 
 @dataclass(kw_only=True)
 class ClickableComponent:
 	clicked: Optional[bool] = False
+	action: Callable
 
 @dataclass(kw_only=True)
 class TextComponent:
 	text: str
 	color: tuple
+	
+@dataclass(kw_only=True)
+class ImageComponent:
+	sprite: pygame.Surface
+
+class MainMenuElementTag: pass
+class GameOverElementTag: pass
+class SuccessMenuElementTag: pass
+class GameUIElementTag: pass

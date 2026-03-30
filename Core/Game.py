@@ -6,6 +6,10 @@ from ECS import Factories
 
 class Game:
 	def __init__(self) -> None:
+		self.player_caught = False
+		self.return_to_main_menu = False
+
+	def init(self):
 		self.has_spawned_guards = False 
 
 		(px, py),(ax, ay) = LevelBuilder.build_level(States.world, States.spatial_grid)
@@ -22,7 +26,7 @@ class Game:
 		# Process Events First
 		AIStatesManager.process(States.world, events, dt)
 		RaycastSystem.process(States.world,States.spatial_grid, events)
-		AINavigationSystem.process(States.world, States.spatial_grid, events)
+		entity_id_that_found_player = AINavigationSystem.process(States.world, States.spatial_grid, events)
 
 		# Handle Games Core
 		InteractionSystem.process(States.world, States.spatial_grid, events)
@@ -36,15 +40,17 @@ class Game:
 			self.change_state_to_looking_for_player()
 			self.has_spawned_guards = True
 
+		if entity_id_that_found_player != None:
+			self.player_caught = True
+			self.return_to_main_menu = True
+
 	def change_state_to_looking_for_player(self):
 		LevelBuilder.spawn_guards(States.world, States.spatial_grid)
 
 	def change_game_state(self):
 		if States.TAKEN_ARTIFACT:
-			print("Game Completed")
-			return True
+			self.return_to_main_menu = True
 		
-		print("Steal Artiface, we're waiting for you")
 
 	def transition_to_chase(self):
 		States.TAKEN_ARTIFACT = True

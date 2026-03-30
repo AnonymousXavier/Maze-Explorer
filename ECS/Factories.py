@@ -6,7 +6,7 @@ import random
 from Core import States
 from Globals import Cache, Enums, Settings, Misc
 from ECS.Components import (AIStateComponent, AnimationComponent, ArtifactTag, 
-	BackgroundComponent, ClickableComponent, ExtractionTag, GuardTag, InteractableComponent, 
+	BackgroundComponent, ClickableComponent, ExtractionTag, GuardTag, ImageComponent, InteractableComponent, 
 	ObstacleTag, PathFindingComponent, RayCastComponent, SpacialComponent, RenderComponent, 
 	PlayerInputTag, StalkerComponent, AnimationStateComponent, HoverComponent, TextComponent,
 	InteractorComponent)
@@ -227,42 +227,60 @@ def spawn_extraction_point(world: dict, spatial_grid: dict, grid_x: int, grid_y:
 
 	return new_id
 
-def new_button(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0)):
+def new_button(ui: dict, text: str, action: Callable, tag: Callable, center: tuple = (0, 0), size: tuple = (0, 0),  bg_color=None, text_color=None, hovered_color=None):
 	new_id = States.NEXT_UI_ELEMENT_ID
 	States.NEXT_UI_ELEMENT_ID += 1
+
+	if not text_color:
+		text_color = Settings.UI.TEXT_COLOR
+	if not bg_color:
+		bg_color = Settings.UI.BUTTON_COLOR
+	if not hovered_color:
+		hovered_color = Settings.UI.HOVERED_BUTTON_COLOR
 
 	rect = pygame.Rect((0, 0), size)
 	rect.center = center
 
 	button = {
 		SpacialComponent: SpacialComponent(rect=rect),
-		BackgroundComponent: BackgroundComponent(color=Settings.UI.BUTTON_COLOR),
-		HoverComponent: HoverComponent(normal_color=Settings.UI.BUTTON_COLOR, hovered_color=Settings.UI.HOVERED_BUTTON_COLOR),
-		ClickableComponent: ClickableComponent(),
-		TextComponent: TextComponent(text=text.upper().upper(), color=Settings.UI.TEXT_COLOR)
+		BackgroundComponent: BackgroundComponent(color=bg_color),
+		HoverComponent: HoverComponent(normal_color=bg_color, hovered_color=hovered_color),
+		ClickableComponent: ClickableComponent(action=action),
+		TextComponent: TextComponent(text=text.upper().upper(), color=Settings.UI.TEXT_COLOR),
+		tag: tag()
 	}
 
 	ui[new_id] = button
 
 	return new_id
 
-def new_panel(ui: dict, center: tuple = (0, 0), size: tuple = (0, 0)):
+def new_panel(ui: dict,tag: Callable, center: tuple = (0, 0), size: tuple = (0, 0), bg_color=None):
 	new_id = States.NEXT_UI_ELEMENT_ID
 	States.NEXT_UI_ELEMENT_ID += 1
+
+	if not bg_color:
+		bg_color = Settings.UI.PANEL_COLOR
 
 	rect = pygame.Rect((0, 0), size)
 	rect.center = center
 
 	panel = {
 		SpacialComponent: SpacialComponent(rect=rect),
-		BackgroundComponent: BackgroundComponent(color=Settings.UI.PANEL_COLOR),
+		BackgroundComponent: BackgroundComponent(color=bg_color),
+		tag: tag()
 	}
 
 	ui[new_id] = panel
 
 	return new_id
 
-def new_label(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0)):
+def new_label(ui: dict, text: str, tag: Callable, center: tuple = (0, 0), size: tuple = (0, 0), text_color=None, bg_color=None):
+	if not text_color:
+		text_color = Settings.UI.TEXT_COLOR
+	if not bg_color:
+		bg_color = Settings.COLOURS.ZERO_ALPHA
+
+
 	new_id = States.NEXT_UI_ELEMENT_ID
 	States.NEXT_UI_ELEMENT_ID += 1
 
@@ -271,10 +289,28 @@ def new_label(ui: dict, text: str, center: tuple = (0, 0), size: tuple = (0, 0))
 
 	label = {
 		SpacialComponent: SpacialComponent(rect=rect),
-		BackgroundComponent: BackgroundComponent(color=Settings.COLOURS.ZERO_ALPHA),
-		TextComponent: TextComponent(text=text.upper(), color=Settings.UI.TEXT_COLOR)
+		BackgroundComponent: BackgroundComponent(color=bg_color),
+		TextComponent: TextComponent(text=text.upper(), color=text_color),
+		tag: tag()
 	}
 
 	ui[new_id] = label
+
+	return new_id
+
+def new_image(ui: dict, center: tuple, sprite: pygame.Surface, tag: Callable):
+	new_id = States.NEXT_UI_ELEMENT_ID
+	States.NEXT_UI_ELEMENT_ID += 1
+
+	rect = pygame.Rect((0, 0), sprite.size)
+	rect.center = center
+
+	image = {
+		SpacialComponent: SpacialComponent(rect=rect),
+		ImageComponent: ImageComponent(sprite=sprite),
+		tag: tag()
+	}
+
+	ui[new_id] = image
 
 	return new_id

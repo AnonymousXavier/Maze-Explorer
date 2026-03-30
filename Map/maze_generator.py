@@ -12,6 +12,7 @@ class maze_generator:
 
 	def create_grid(self):
 		grid = {}
+		print(Settings.MAP.MAP_SIZE)
 		for y in range(Settings.MAP.ROWS):
 			for x in range(Settings.MAP.COLS):
 				grid[(x, y)] = []

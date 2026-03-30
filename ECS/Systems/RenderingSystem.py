@@ -1,10 +1,11 @@
 from Core import States
-from ECS.Components import BackgroundComponent, PlayerInputTag, RayCastRegion, SpacialComponent, RenderComponent, TextComponent
+from ECS.Components import BackgroundComponent, ClickableComponent, GameOverElementTag, GameUIElementTag, ImageComponent, MainMenuElementTag, PlayerInputTag, RayCastRegion, SpacialComponent, RenderComponent, SuccessMenuElementTag, TextComponent
 from ECS.Systems import CameraSystem
 
 import pygame
 
 from Globals import  Misc, Settings
+from Globals.Enums import STATES
 
 def process(surface: pygame.Surface, world: dict, spatial_grid: dict, UI: dict, camera:dict):
 	camera_rect: pygame.Rect = camera[SpacialComponent].rect
@@ -71,7 +72,7 @@ def draw_game_entities(world: dict, spatial_grid: dict, cam_boundary: dict, came
 		foggy_view_surface = pygame.Surface((cbw, cbh), pygame.SRCALPHA)
 		foggy_view_surface.fill(Settings.COLOURS.BLACK)
 
-		pygame.draw.circle(foggy_view_surface, Settings.COLOURS.ZERO_ALPHA, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
+		pygame.draw.circle(foggy_view_surface, Settings.COLOURS.TRANSPARENT_LIGHT_COLOR, (px, py), cbw * Settings.GAME.PLAYER_LIGHT_RADIUS_AS_PERCENT_OF_SCREEN_AREA * 0.5)
 		render_surface.blit(foggy_view_surface)
 
 	return render_surface
@@ -80,22 +81,52 @@ def draw_ui(UI: dict):
 	render_surface = pygame.Surface(Settings.WINDOW.DEFAULT_SIZE, pygame.SRCALPHA)
 	for element_id in UI:
 		element = UI[element_id]
-		if SpacialComponent in element:
+		if SpacialComponent not in element or(BackgroundComponent not in element and ImageComponent not in element):
+			continue
+			
+		if get_expected_tag() not in element:
+			continue
+
+		if TextComponent not in element:
 			if BackgroundComponent in element:
-				if TextComponent not in element:
-					pygame.draw.rect(render_surface, element[BackgroundComponent].color, element[SpacialComponent].rect)
-				else:
-					text_surface = Settings.UI.FONT.render(UI[element_id][TextComponent].text, True, UI[element_id][TextComponent].color)
-					tw, th = text_surface.size
-					factor = (1 + Settings.UI.TEXT_PADDING_AS_PERCENTAGE_OF_SIZE)
-					bg_size = tw * factor, th * factor
+				pygame.draw.rect(render_surface, element[BackgroundComponent].color, element[SpacialComponent].rect)
+			elif ImageComponent in element:
+				render_surface.blit(element[ImageComponent].sprite, element[SpacialComponent].rect)
+		else:
+			font = get_element_font(element)
 
-					render_rect = pygame.Rect((0, 0), bg_size)
-					render_rect.center = element[SpacialComponent].rect.center
+			text_surface = font.render(element[TextComponent].text, True, element[TextComponent].color)
+			tw, th = text_surface.size
+			factor = (1 + Settings.UI.TEXT_PADDING_AS_PERCENTAGE_OF_SIZE)
+			bg_size = tw * factor, th * factor
 
-					print(element[SpacialComponent].rect)
+			render_rect = pygame.Rect((0, 0), bg_size)
+			render_rect.center = element[SpacialComponent].rect.center
+			element[SpacialComponent].rect = render_rect
 
-					pygame.draw.rect(render_surface, element[BackgroundComponent].color, render_rect)
-					render_surface.blit(text_surface, text_surface.get_rect(center=render_rect.center))
+			pygame.draw.rect(render_surface, element[BackgroundComponent].color, render_rect)
+			render_surface.blit(text_surface, text_surface.get_rect(center=render_rect.center))
 
 	return render_surface
+
+def get_element_font(element: dict):
+	if States.CURRENT_GAME_STATE == STATES.GAME:
+		font = Settings.UI.GAME_FONT
+	else:
+		if ClickableComponent in element:
+			font = Settings.UI.BTN_FONT
+		else:
+			font = Settings.UI.TITLE_FONT
+
+	return font
+
+def get_expected_tag():
+	match States.CURRENT_GAME_STATE:
+		case STATES.GAME:
+			return GameUIElementTag
+		case STATES.GAME_OVER:
+			return GameOverElementTag
+		case STATES.SUCCESS:
+			return SuccessMenuElementTag
+		case STATES.MAIN_MENU:
+			return MainMenuElementTag

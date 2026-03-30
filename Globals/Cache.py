@@ -29,6 +29,10 @@ class SPRITES:
 	ARTIFACT = load_animation("Assets\\Sprites\\Artifacts.png", sprite_size)[0]
 	EXTRACTION_POINT_MARKER = load_sprite("Assets\\Sprites\\ExtractionPointMarker.png")
 
+	class MAIN_MENU:
+		CONTROLS_SPRITES = load_sprite("Assets\\Sprites\\Menu\\Controls.png")
+		COVER_ART = load_sprite("Assets\\Sprites\\Menu\\NinjaAdventure CoverArt.png")
+
 	class PLAYER:
 		red_ninja_walk = load_animation("Assets\\Sprites\\Player\\Red Ninja\\Walk.png", sprite_size, vertical=True)
 		red_ninja_dead = load_sprite("Assets\\Sprites\\Player\\Red Ninja\\Dead.png")

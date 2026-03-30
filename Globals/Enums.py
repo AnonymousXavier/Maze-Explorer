@@ -38,3 +38,9 @@ class DIRECTIONS:
 	RIGHT = 3
 
 	ALL = (DOWN, RIGHT, UP, LEFT)
+
+class STATES:
+	MAIN_MENU = 0
+	GAME = 1
+	SUCCESS = 2
+	GAME_OVER = 3

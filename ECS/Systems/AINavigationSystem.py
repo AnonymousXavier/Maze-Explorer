@@ -1,4 +1,4 @@
-from ECS.Components import AIStateComponent, PathFindingComponent, SpacialComponent
+from ECS.Components import AIStateComponent, PathFindingComponent, PlayerInputTag, SpacialComponent
 from ECS.Systems import PathFindingSystem
 from Globals import Enums
 
@@ -33,8 +33,18 @@ def process(world: dict, spatial_grid: dict, events: list):
 			entities_done_pathfinding.append(obj_id)
 			world[obj_id][AIStateComponent].state = Enums.AI_STATES.SEARCH
 
+	entity_that_found_player = None
 	for obj_id in entities_done_pathfinding:
+		# Before Removing.. find out if player an guard share the same location
+		grid_pos = world[obj_id][SpacialComponent].grid_pos
+		for entity_id in spatial_grid[grid_pos]:
+			if PlayerInputTag in world[entity_id]:
+				entity_that_found_player = obj_id
+				break
+
 		pathfinding_entities.remove(obj_id)
+
+	return entity_that_found_player
 
 
 

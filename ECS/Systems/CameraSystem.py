@@ -8,12 +8,13 @@ def process(world: dict, camera: dict, delta: float):
 	targets_id = camera[StalkerComponent].target_id
 	targets_rect = world[targets_id][SpacialComponent].rect
 
+	boundary = get_boundary_of(camera)
+	cw, ch = boundary["world_size"]
+
 	cam_rect.center = Misc.interpolate_towards(cam_rect.center, targets_rect.center, delta * 2)
 
-	cam_rect.right = math.clamp(cam_rect.right, 0, Settings.MAP.WORLD_WIDTH)
-	cam_rect.left = math.clamp(cam_rect.left, 0, Settings.MAP.WORLD_WIDTH)
-	cam_rect.top = math.clamp(cam_rect.top, 0, Settings.MAP.WORLD_HEIGHT)
-	cam_rect.bottom = math.clamp(cam_rect.bottom, 0, Settings.MAP.WORLD_HEIGHT)
+	cam_rect.centerx = math.clamp(cam_rect.centerx, cw // 2, Settings.MAP.WORLD_WIDTH - cw // 2)
+	cam_rect.centery = math.clamp(cam_rect.centery, ch // 2, Settings.MAP.WORLD_HEIGHT - ch // 2)
 
 def get_boundary_of(camera: dict):
 	cam_rect: Rect = camera[SpacialComponent].rect
