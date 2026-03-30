@@ -1,4 +1,5 @@
 import pygame
+import time
 
 pygame.init()
 
@@ -35,7 +36,7 @@ class MAP:
 	SPACING_TO_WIDTH_RATIO = 0.05
 
 	# MAZE GENERATION
-	SEED = 100
+	SEED = time.time()
 	ROWS = 6
 	COLS = 6
 
