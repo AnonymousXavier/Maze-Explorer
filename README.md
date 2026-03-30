@@ -1,4 +1,4 @@
-# 🔦 [INSERT CHOSEN NAME HERE] 
+# 🔦 MAZE EXPLORER 
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Pygame](https://img.shields.io/badge/Pygame-CE-green?style=for-the-badge)
