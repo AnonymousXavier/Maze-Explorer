@@ -1,8 +1,10 @@
 from Globals import Enums, Misc
 from ECS.Components import InteractableComponent, SpacialComponent
 
+interaction_occured = False
 
 def process(world: dict, spatial_grid: dict, events: list):
+	global interaction_occured
 	for event in events:
 		if event["type"] == Enums.EventType.INTERACTION_INTENT:
 			interactor_id = event["entity_id"]
@@ -15,3 +17,4 @@ def process(world: dict, spatial_grid: dict, events: list):
 				if InteractableComponent in entity:
 					if entity[InteractableComponent].action() and entity[InteractableComponent].one_time:
 						Misc.remove_entity_from_grid(entity_id, grid_pos, spatial_grid)
+						interaction_occured = True

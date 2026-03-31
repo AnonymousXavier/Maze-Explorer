@@ -4,10 +4,13 @@ from ECS import Factories
 from Globals import Cache, Misc
 from Map.world_generator import world_generator
 from Globals import Enums, Settings
+from Misc.Mods_Manager import ModsManager
 
 random.seed(Settings.MAP.SEED)
 
 def build_level(world: dict, spatial_grid: dict):
+	ModsManager.trigger_level_start(world, spatial_grid)
+
 	world_gen = world_generator()
 	world_gen.build()
 

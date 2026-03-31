@@ -1,5 +1,9 @@
+import pygame
 from ECS.Loaders.SpriteLoader import load_animation, load_sprite
 from Globals import Enums, Settings
+
+pygame.mixer.init()
+pygame.init()
 
 sprite_size = Settings.SPRITES.SIZE
 
@@ -78,3 +82,16 @@ class SPRITES:
 				}
 		}
 
+class AUDIO:
+	class BG_MUSIC_PATHS:
+		# Singles will contain duplicates cos of random function
+		PEACEFUL = ["Assets\\Audio\\Game\\Peaceful_BG_Music.ogg", "Assets\\Audio\\Game\\Peaceful_BG_Music2.ogg"]
+		SUSPENSE = ["Assets\\Audio\\Game\\Suspense_BG_Music.ogg", "Assets\\Audio\\Game\\Suspense_BG_Music.ogg"]
+		GAME_OVER = ["Assets\\Audio\\Menu\\GameOverMenu.ogg", "Assets\\Audio\\Menu\\GameOverMenu.ogg"]
+		MAIN_MENU = ["Assets\\Audio\\Menu\\MainMenu.ogg", "Assets\\Audio\\Menu\\MainMenu2.ogg"]
+		SUCCESS = ["Assets\\Audio\\Menu\\SuccessMenu.ogg", "Assets\\Audio\\Menu\\SuccessMenu.ogg"]
+
+	class SOUND_EFFECTS:
+		ARTIFACT_COLLECTED = pygame.mixer.Sound("Assets\\Audio\\Game\\ArtifactCollected.wav")
+		PLAYER_DETECTED = pygame.mixer.Sound("Assets\\Audio\\Game\\PlayerDetected.wav")
+		GAME_OVER = pygame.mixer.Sound("Assets\\Audio\\Game\\GameOver.wav")

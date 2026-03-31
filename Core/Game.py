@@ -1,7 +1,7 @@
 from ECS.Builders import LevelBuilder
 from Globals import Settings
 from Core import States
-from ECS.Systems import AINavigationSystem, AnimationSystem, CameraSystem, InteractionSystem, RaycastSystem, Movement, AnimationStatesManager, FloorManager, AIStatesManager
+from ECS.Systems import AINavigationSystem, AnimationSystem, CameraSystem, InteractionSystem, ModsSystem, RaycastSystem, Movement, AnimationStatesManager, FloorManager, AIStatesManager
 from ECS import Factories
 
 class Game:
@@ -23,6 +23,8 @@ class Game:
 		FloorManager.spawn_floor(States.world, States.spatial_grid, States.camera, 0, 0)
 
 	def update(self, events: list, dt: float):
+		ModsSystem.process(States.world, States.spatial_grid, events, dt)
+
 		# Process Events First
 		AIStatesManager.process(States.world, events, dt)
 		RaycastSystem.process(States.world,States.spatial_grid, events)

@@ -1,40 +1,42 @@
-from importlib.machinery import ModuleSpec
-import importlib.util
 import os
-import sys
+import importlib.util
+from Misc.BaseMod import BaseMod
 
-class Mods_Manager:
-	def __init__(self) -> None:
-		self.active_entities = []
-		self.loaded_mods = []
+class ModsManager:
+    active_mods = []
 
-	def run(self):
-		self.load_mods()
-		self.unpack_attributes()
+    @classmethod
+    def load_mods(cls):
+        mods_path = "mods"
+        if not os.path.exists(mods_path):
+            os.makedirs(mods_path)
+            return
 
-	def load_mods(self, mod_folder="mods"):
-		"""Scans the mod folder and dynamically loads scripts."""
-		if not os.path.exists(mod_folder):
-			os.makedirs(mod_folder)
-			print(f"Created '{mod_folder}' folder. Drop your mod scripts here!")
-			return
+        for filename in os.listdir(mods_path):
+            if filename.endswith(".py"):
+                mod_name = filename[:-3]
+                file_path = os.path.join(mods_path, filename)
 
-		for filename in os.listdir(mod_folder):
-			if filename.endswith(".py"):
-				mod_name = filename[:-3]
-				filepath = os.path.join(mod_folder, filename)
+                # 1. Load the script dynamically
+                spec = importlib.util.spec_from_file_location(mod_name, file_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
 
-				# Dynamically load the python file
-				spec = importlib.util.spec_from_file_location(mod_name, filepath)
-				mod = importlib.util.module_from_spec(spec)
-				spec.loader.exec_module(mod)
+                # 2. Scan the script for classes that inherit from BaseMod
+                for attribute_name in dir(module):
+                    attribute = getattr(module, attribute_name)
+                    if isinstance(attribute, type) and issubclass(attribute, BaseMod) and attribute is not BaseMod:
+                        # 3. Instantiate the mod and save it
+                        mod_instance = attribute()
+                        cls.active_mods.append(mod_instance)
+                        print(f"Loaded Mod: {mod_instance.name} v{mod_instance.version} by {mod_instance.author}")
 
-				self.loaded_mods.append(mod)
+    @classmethod
+    def trigger_engine_init(cls, settings, cache):
+        for mod in cls.active_mods:
+            mod.on_engine_init(settings, cache)
 
-	def unpack_attributes(self):
-		# Check if the mod has the required 'Entity' class
-		for mod in self.loaded_mods:
-			if hasattr(mod, 'Entity'):
-				entity = mod.Entity()
-				self.active_entities.append(entity)
-				print(f"Loaded mod: {entity.name}")
+    @classmethod
+    def trigger_level_start(cls, world, spatial_grid):
+        for mod in cls.active_mods:
+            mod.on_level_start(world, spatial_grid)

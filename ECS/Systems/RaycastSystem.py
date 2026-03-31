@@ -13,6 +13,7 @@ directions = {
 frame = 0
 
 ray_surface_size = -1, -1
+found_player = False
 
 def process(world: dict, spatial_grid: dict, events: list):
 	global frame
@@ -81,7 +82,9 @@ def cast_ray_and_spawn_in_grid(world: dict, spatial_grid: dict, obj: dict):
 					# For now add only if its a player
 					for entity_id in entities:
 						if PlayerInputTag in world[entity_id]:
+							global found_player
 							obj[RayCastRegion].found_entities.add(entity_id)
+							found_player = True
 
 				arc_length += 0.2
 
