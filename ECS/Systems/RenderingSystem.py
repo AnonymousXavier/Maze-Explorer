@@ -78,7 +78,8 @@ def draw_game_entities(world: dict, spatial_grid: dict, cam_boundary: dict, came
 	return render_surface
 
 def draw_ui(UI: dict):
-	render_surface = pygame.Surface(Settings.WINDOW.DEFAULT_SIZE, pygame.SRCALPHA)
+	render_surface = pygame.Surface(Settings.WINDOW.PREFERRED_SIZE, pygame.SRCALPHA)
+
 	for element_id in UI:
 		element = UI[element_id]
 		if SpacialComponent not in element or(BackgroundComponent not in element and ImageComponent not in element):
@@ -107,6 +108,8 @@ def draw_ui(UI: dict):
 			pygame.draw.rect(render_surface, element[BackgroundComponent].color, render_rect)
 			render_surface.blit(text_surface, text_surface.get_rect(center=render_rect.center))
 
+
+	render_surface = pygame.transform.scale(render_surface, Settings.WINDOW.DEFAULT_SIZE)
 	return render_surface
 
 def get_element_font(element: dict):

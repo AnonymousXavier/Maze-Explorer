@@ -17,7 +17,7 @@ def create_temp_camera():
     main_menu_bg_id = MainMenuBuilder.build(States.UI)
     States.camera = Factories.new_camera((0, 0), Settings.CAMERA.SIZE, main_menu_bg_id)
 
-def reset():
+def reset(game: Game):
     global game_ended_before
 
     game_ended_before = False
@@ -26,15 +26,23 @@ def reset():
     GameOverMenuBuilder.reset()
     SuccessScreenBuilder.reset()
 
+    game.reset()
+
+
     States.reset()
     create_temp_camera()
 
 def add_fps_label_to_world():
 	global fps_label_id
-	
-	mx, my = Settings.UI.MARGIN * Settings.WINDOW.WIDTH, Settings.UI.MARGIN * Settings.WINDOW.HEIGHT
+
 	fps_label_id = Factories.new_label(States.UI, text="60", tag = GameUIElementTag,text_color=Settings.COLOURS.CYAN)
-	States.UI[fps_label_id][SpacialComponent].rect.bottomleft = mx, Settings.WINDOW.HEIGHT - my
+    
+
+def keep_fps_position_constant():
+    px, py = Settings.WINDOW.PREFERRED_SIZE
+    mx, my = Settings.UI.MARGIN * px, Settings.UI.MARGIN * py
+
+    States.UI[fps_label_id][SpacialComponent].rect.bottomleft = mx, py - my
 
 def manage_state_transitions(game: Game):
     global play_again, game_ended_before
@@ -67,13 +75,14 @@ def manage_state_transitions(game: Game):
             game.return_to_main_menu = False
 
 def process(game: Game, events: list, dt: float):
-	manage_state_transitions(game)
+    manage_state_transitions(game)
 
-	if States.CURRENT_GAME_STATE != STATES.GAME:
-		MenusUpdater.process(States.UI)
-	else:
-		game.update(events, dt)
-		States.UI[fps_label_id][TextComponent].text = str(round(Settings.WINDOW.CLOCK.get_fps()))
+    if States.CURRENT_GAME_STATE != STATES.GAME:
+        MenusUpdater.process(States.UI)
+    else:
+        game.update(events, dt)
+        States.UI[fps_label_id][TextComponent].text = str(round(Settings.WINDOW.CLOCK.get_fps()))
+        keep_fps_position_constant()
 
 def update_game_settings_with_selected_option():
     i = MainMenuBuilder.selected_btn_ref_id

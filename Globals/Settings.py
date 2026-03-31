@@ -4,9 +4,11 @@ import time
 pygame.init()
 
 class WINDOW:
-	WIDTH = 1000
-	HEIGHT = 1000
+	WIDTH = 500
+	HEIGHT = 500
 	CENTER = WIDTH // 2, HEIGHT // 2
+
+	PREFERRED_SIZE = 1000, 1000 # All UI calculations are done with this size but scaled to fit the window
 	TITLE = "Maze Explorer"
 	SIZE = WIDTH, HEIGHT
 
@@ -21,7 +23,10 @@ class UPDATE:
 	RAYCASTS_PER_SEC = 5
 
 class CAMERA:
-	ZOOM = 2
+	pw, ph = WINDOW.PREFERRED_SIZE
+	ww, wh = WINDOW.SIZE
+
+	ZOOM = 2 * wh // ph
 	WIDTH = WINDOW.WIDTH / ZOOM
 	HEIGHT = WINDOW.HEIGHT / ZOOM
 
@@ -105,6 +110,7 @@ class DEBUG:
 	RAYCAST_COLOR = COLOURS.GREY_HALF_ALPHA
 
 class UI:
+	px, _ = WINDOW.PREFERRED_SIZE
 	PANEL_COLOR = (22, 22, 27)
 	BUTTON_COLOR = COLOURS.GREEN_GREY
 	HOVERED_BUTTON_COLOR = COLOURS.REALLY_DARK_GRAY
@@ -112,8 +118,8 @@ class UI:
 	BUTTON_DISTANCE_FROM_WINDOW_CENTER_AS_PERCENTAGE = 0.5
 
 	BTN_FONT_SIZE = 48
-	TITLE_FONT_SIZE = 96
-	GAME_FONT_SIZE = 24
+	TITLE_FONT_SIZE = 96 
+	GAME_FONT_SIZE = 24 
 
 	FONT_NAME = "COURIER NEW"
 	TITLE_FONT = pygame.font.SysFont(FONT_NAME, TITLE_FONT_SIZE, bold=True)
@@ -144,3 +150,9 @@ def update_map_constants():
 
 	# GAME
 	GAME.NUMBER_OF_GUARDS = MAP.ROWS * MAP.COLS // 2
+
+	# CAMERA
+	CAMERA.ZOOM = 2 * WINDOW.WIDTH // WINDOW.PREFERRED_SIZE[0]
+
+window = pygame.display.set_mode(WINDOW.SIZE, pygame.RESIZABLE)
+pygame.display.set_caption(WINDOW.TITLE)

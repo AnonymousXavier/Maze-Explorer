@@ -15,27 +15,29 @@ def reset():
 	start_game = False
 
 def build(ui: dict):
+	pw, ph = Settings.WINDOW.PREFERRED_SIZE
 	cx, cy = Settings.WINDOW.DEFAULT_CENTER
-	ww, wh = Settings.WINDOW.DEFAULT_SIZE
 
-	tw, th = (ww // 4, wh // 4)
+	# The UI Works Perfectly with 1000.. so to make it respensive, everything is drawn relative to it
+	tw, th = (pw // 4 , ph// 4)
 
 	controls_sprite = pygame.transform.scale_by(Cache.SPRITES.MAIN_MENU.CONTROLS_SPRITES, 3)
 	cover_art_sprite = pygame.transform.scale(Cache.SPRITES.MAIN_MENU.COVER_ART, (tw, th))
 
-	lw, lh = ww - tw, wh // 2 - th
-	bg_id = Factories.new_panel(ui, tag=MainMenuElementTag, center=Settings.WINDOW.DEFAULT_CENTER, size=Settings.WINDOW.DEFAULT_SIZE)
+	lw, lh = pw - tw, ph // 2 - th
+
+	bg_id = Factories.new_panel(ui, tag=MainMenuElementTag, center=(pw // 2, ph // 2), size=(pw, ph))
 	maze_label_id = Factories.new_label(ui, text="         Maze", tag=MainMenuElementTag, center=(cx - lw // 2, 0), size=(lw, lh), bg_color=Settings.UI.PANEL_COLOR, text_color=Settings.COLOURS.CYAN)
 	explorer_label_id = Factories.new_label(ui, text="     Explorer", tag=MainMenuElementTag, center=(cx - lw // 2, cy // 2 - lh // 2 + lh), size=(lw, lh), bg_color=Settings.UI.PANEL_COLOR, text_color=Settings.COLOURS.CYAN)
 
 	maze_label_rect: pygame.Rect = ui[maze_label_id][SpacialComponent].rect
-	maze_label_rect.midright = (ww - lw // 2.5, lh // 4)
+	maze_label_rect.midright = (pw - lw // 2.5, lh // 4)
 
 	label_rect: pygame.Rect = ui[explorer_label_id][SpacialComponent].rect
-	label_rect.midright = (ww - lw // 4.25, lh / 1.5)
+	label_rect.midright = (pw - lw // 4.25, lh / 1.5)
 
 	sw, sh = controls_sprite.get_size()
-	Factories.new_image(ui, tag=MainMenuElementTag, center=(ww - sw // 2, wh - sh//2), sprite=controls_sprite)
+	Factories.new_image(ui, tag=MainMenuElementTag, center=(pw - sw // 2, ph - sh//2), sprite=controls_sprite)
 	Factories.new_image(ui, tag=MainMenuElementTag, center=(tw // 2, th // 2), sprite=cover_art_sprite)
 	buttons = initialize_buttons()
 
@@ -53,17 +55,17 @@ def initialize_buttons():
 	return buttons
 
 def position_elements(buttons: list):
-	ww, wh = Settings.WINDOW.DEFAULT_SIZE
+	pw, ph = Settings.WINDOW.PREFERRED_SIZE
 
 	# Find Optimal Button Seperation
-	remaining_distance = (wh) * (1 -  Settings.UI.BUTTON_DISTANCE_FROM_WINDOW_CENTER_AS_PERCENTAGE)
+	remaining_distance = (ph) * (1 -  Settings.UI.BUTTON_DISTANCE_FROM_WINDOW_CENTER_AS_PERCENTAGE)
 	seperation = remaining_distance / (len(buttons) + 1)
 	offset = seperation / 2
 
-	y = (wh * Settings.UI.BUTTON_DISTANCE_FROM_WINDOW_CENTER_AS_PERCENTAGE) + seperation + offset
+	y = (ph * Settings.UI.BUTTON_DISTANCE_FROM_WINDOW_CENTER_AS_PERCENTAGE) + seperation + offset
 	for btn_id in buttons:
 		btn_rect = States.UI[btn_id][SpacialComponent].rect
-		btn_rect.centerx = ww // 4
+		btn_rect.centerx = pw // 4
 		btn_rect.centery = y
 
 		y += seperation

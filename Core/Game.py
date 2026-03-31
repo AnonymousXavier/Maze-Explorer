@@ -9,6 +9,10 @@ class Game:
 		self.player_caught = False
 		self.return_to_main_menu = False
 
+	def reset(self):
+		self.player_caught = False
+		self.return_to_main_menu = False
+
 	def init(self):
 		self.has_spawned_guards = False 
 

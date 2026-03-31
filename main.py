@@ -6,9 +6,6 @@ from Globals import Settings, Cache
 from Core import States
 from Misc.Mods_Manager import ModsManager
 
-window = pygame.display.set_mode(Settings.WINDOW.SIZE, pygame.RESIZABLE)
-pygame.display.set_caption(Settings.WINDOW.TITLE)
-
 class Main:
     def __init__(self) -> None:
         self.game = Game()
@@ -27,8 +24,8 @@ class Main:
         GameStateManager.process(self.game, events, dt)
 
     def draw(self):
-        window.fill(Settings.COLOURS.BLACK)
-        RenderingSystem.process(window, States.world, States.spatial_grid, States.UI, States.camera)
+        Settings.window.fill(Settings.COLOURS.BLACK)
+        RenderingSystem.process(Settings.window, States.world, States.spatial_grid, States.UI, States.camera)
         pygame.display.update()
 
     def run(self):
@@ -37,6 +34,6 @@ class Main:
             self.draw()
 
             if GameStateManager.game_ended_before:
-                GameStateManager.reset()
+                GameStateManager.reset(self.game)
 
 Main().run()

@@ -34,9 +34,14 @@ def process(world: dict, global_event: list):
 			break
 		# WINDOW RESIZING
 		elif event.type == pygame.VIDEORESIZE:
-			Settings.WINDOW.WIDTH = event.w
-			Settings.WINDOW.HEIGHT = event.h
-			Settings.WINDOW.SIZE = (event.w, event.h)
+
+			w, h = max(500, event.h), max(500, event.h)
+
+			Settings.WINDOW.WIDTH = w
+			Settings.WINDOW.HEIGHT = h
+			Settings.WINDOW.SIZE = (Settings.WINDOW.WIDTH, Settings.WINDOW.HEIGHT)
+
+			Settings.window = pygame.display.set_mode(Settings.WINDOW.SIZE, pygame.RESIZABLE)
 
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_F11:
