@@ -7,6 +7,7 @@ from Core import States
 from Misc.Mods_Manager import ModsManager
 
 window = pygame.display.set_mode(Settings.WINDOW.SIZE, pygame.RESIZABLE)
+pygame.display.set_caption(Settings.WINDOW.TITLE)
 
 class Main:
     def __init__(self) -> None:
