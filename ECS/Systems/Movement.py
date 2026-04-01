@@ -22,7 +22,7 @@ def process(world: dict, spatial_grid: dict, global_event: list, delta: float):
                     if (nx, ny) in spatial_grid:
                         for _obj_id in spatial_grid[(nx, ny)]:
                             if ObstacleTag in world[_obj_id]:
-                                hit_a_wall = False
+                                hit_a_wall = True
                                 break
 
                     if hit_a_wall: break
